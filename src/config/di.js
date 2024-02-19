@@ -3,7 +3,7 @@ const CarService = require("../module/car/service/carService");
 const CarRepository = require("../module/car/repository/carRepository");
 const { default: DIContainer, object, get, factory } = require("rsdi");
 const session = require("express-session");
-const multer = require("mutler");
+const multer = require("multer");
 const path = require("path");
 const Sqlite3Database = require("better-sqlite3");
 
