@@ -1,6 +1,4 @@
-const CarController = require("../module/car/controller/carController");
-const CarService = require("../module/car/service/carService");
-const CarRepository = require("../module/car/repository/carRepository");
+const { CarController, CarService, CarRepository } = require("../module/car/module");
 const { default: DIContainer, object, get, factory } = require("rsdi");
 const session = require("express-session");
 const multer = require("multer");
