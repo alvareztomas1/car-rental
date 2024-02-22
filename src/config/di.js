@@ -6,9 +6,9 @@ const path = require("path");
 const Sqlite3Database = require("better-sqlite3");
 
 function configureMainDatabaseAdapter(){
-	return new Sqlite3Database(process.env.DB_path),{
-		verbose: true
-	};
+	return new Sqlite3Database(process.env.DB_path,{
+		verbose: console.log
+	});
 }
 
 function configureSession(){
