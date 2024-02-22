@@ -51,7 +51,7 @@ module.exports = class CarRepository extends AbstractRepository {
 		).get(id);
 
 		if (car === undefined) {
-			throw new CarNotFoundError();
+			throw new CarNotFoundError("Car not found");
 		}
 
 		return fromDbToEntity(car);

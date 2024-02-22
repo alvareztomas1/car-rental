@@ -12,7 +12,7 @@ module.exports = class CarService extends AbstractService {
 	
 	async getById(id){
 		if(id === undefined){
-			throw new CarIdNotDefinedError();
+			throw new CarIdNotDefinedError("Car id not defined");
 		}
 		return this.carRepository.getById(id);
 	}

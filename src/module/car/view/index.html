@@ -1,6 +1,23 @@
 {% extends "view/layout/base.html" %}
 
 {% block body %}
+<div class="columns is-centered">
+    <div class="column is-half">
+        {% for error in errors %}
+
+        <div class="notification is-danger">
+            {{error}}
+        </div>
+        {% endfor %}
+
+        {% for message in messages %}
+        <div class="notification is-success">
+            {{message}}
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
 
 <div id="cars" class="columns is-centered is-multiline cars">
     {% for car in data.cars %}
@@ -36,13 +53,14 @@
                 </div>
             </div>
             <footer class="card-footer">
-                <a {% if car.reserved %}disabled{% endif %} href="#" class="button is-inverted is-primary card-footer-item">Reserve</a>
+                <a {% if car.reserved %}disabled{% endif %} href="#"
+                    class="button is-inverted is-primary card-footer-item">Reserve</a>
                 <a href="/car/{{car.id}}" class="button is-inverted is-link card-footer-item">Info</a>
                 <a href="#" class="button is-inverted is-info card-footer-item">Edit</a>
                 <a href="#" class="button is-inverted is-danger  card-footer-item">Delete</a>
             </footer>
         </div>
-       
+
     </div>
     {% endfor %}
 

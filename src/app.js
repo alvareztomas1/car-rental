@@ -20,6 +20,8 @@ app.use("/node_modules", express.static("node_modules"));
 
 const container = configureDependencyInjectionContainer();
 
+app.use(container.get("Session"));
+
 initCarModule(app, container);
 
 const carController = container.get("CarController");

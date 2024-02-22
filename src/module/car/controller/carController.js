@@ -1,4 +1,6 @@
 const AbstractController = require("./abstractController");
+const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
+
 module.exports = class CarController extends AbstractController {
 	constructor(uploadMiddleware, carService) {
 		super();
@@ -14,16 +16,26 @@ module.exports = class CarController extends AbstractController {
 	}
 	async index(req, res){
 		const cars = await this.carService.getAll();
-		res.render("car/view/index.html", { data: { cars } });
+		const { errors, messages } = req.session;
+
+		res.render("car/view/index.html", { data: { cars }, errors, messages });
+
+		req.session.errors = [];
+		req.session.message = [];
+
 	}
 	async view(req, res){
 		const id = req.params.id;
+
+		if(!id){
+			throw new CarIdNotDefinedError("Car id not defined");
+		}
+
 		try{
 			const car = await this.carService.getById(id);
-			console.log(car);
 			res.render("car/view/view.html", { data: { car } });
 		}catch(e){
-			// SHOW ERROR
+			req.session.errors = [e.message, e.stack];
 			res.redirect("/car");
 		}
 
