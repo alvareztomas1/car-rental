@@ -5,3 +5,18 @@ html{
 #title{
     color: #313d44;
 }
+.car-logo{
+    height: 150px;
+}
+.custom-info{
+    background-color: #d4eaf7;
+}
+.custom-edit{
+    background-color: #b6ccd8;
+}
+.custom-reserve{
+    background-color: #8bd3f7;
+}
+.cars{
+    margin: 20px
+}
