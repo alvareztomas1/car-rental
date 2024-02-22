@@ -1,4 +1,5 @@
 const AbstractService = require("./abstractService");
+const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 
 module.exports = class CarService extends AbstractService {
 	constructor(carRepository){
@@ -9,6 +10,12 @@ module.exports = class CarService extends AbstractService {
 		return this.carRepository.getAll();
 	}
 	
+	async getById(id){
+		if(id === undefined){
+			throw new CarIdNotDefinedError();
+		}
+		return this.carRepository.getById(id);
+	}
 
 
 };
