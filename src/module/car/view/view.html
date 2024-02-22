@@ -1,0 +1,58 @@
+{% extends "view/layout/base.html" %}
+
+{% block title %}
+    {{ data.car.brand }} {{ data.car.model }} Info
+{% endblock %}
+
+{% block body %}
+
+<div class="columns is-mobile is-centered">
+    <div class="column is-one-third">
+        <div class="card">
+            <div class="card-image">
+                <figure class="image is-3by2">
+                    <img src="{{ data.car.image }}" alt="car image">
+                </figure>
+            </div>
+            <div class="card-content">
+
+                <div class="content">
+                    <p class="title">{{ data.car.brand }} {{ data.car.model }} {{ data.car.year }}</p>
+                    <p class="subtitle"> {% if car.reserved %}
+                    <p><span class="tag is-dark is-medium">Reserved</span></p>
+                    {% else %}
+                    <span class="tag is-success is-medium">{{ data.car.price }}$ per day</span>
+                    {% endif %}</p>
+                    <br>
+                    <blockquote>{{ data.car.description }}</blockquote>
+                    <ul>
+                        <li>{{ data.car.transmission }}</li>
+                        <li>{{ data.car.fuel }}</li>
+                        {% if data.car.airConditioning %}
+                        <li> Air conditioning</li>
+                        {% endif %}
+                        {% if data.car.unlimitedMileage %}
+                        <li> Unlimited mileage</li>
+                        {% endif %}
+                        <li>{{ data.car.trunk }} Trunk</li>
+                        <li> {{ data.car.doors }} Doors</li>
+                        <li> {{ data.car.seats }} Seats </li>
+                    </ul>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="/" class="button is-link is-inverted card-footer-item">Back</a>
+                <a {% if data.car.reserved %}disabled{% endif %} href="#"
+                    class="button is-primary is-inverted card-footer-item">Reserve</a>
+                <a href="#" class="button is-info is-inverted card-footer-item">Edit</a>
+                <a href="#" class="button is-danger is-inverted card-footer-item">Delete</a>
+            </footer>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+</div>
+{% endblock %}
