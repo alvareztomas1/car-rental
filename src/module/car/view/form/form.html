@@ -1,0 +1,20 @@
+{% extends "view/layout/base.html" %}
+
+{% block body %}
+
+<br>
+
+<form method="POST" action="/car/create" enctype="multipart/form-data">
+
+    <div class="columns is-centered">
+        <div class="column is-three-fifths">
+            <div class="box">
+                {% include "car/view/form/form_content.html" %}
+                {% include "car/view/form/form_actions.html" %}
+            </div>
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}
