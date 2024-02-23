@@ -22,16 +22,11 @@
 <div id="cars" class="columns is-centered is-multiline cars">
     {% for car in data.cars %}
     <div class="column is-one-quarter">
-        <div id={{car.id}} class="card">
+        <div id={{car.id}} class="card car-card">
             <header class="card-header">
                 <p class="card-header-title  is-centered">
                     <img class="car-logo" src={{car.image}} alt="car image">
                 </p>
-                <button class="card-header-icon" aria-label="more options">
-                    <span class="icon">
-                        <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                </button>
             </header>
             <div class="card-content">
                 <div class="content is-small">
@@ -55,7 +50,7 @@
             <footer class="card-footer">
                 <a {% if car.reserved %}disabled{% endif %} href="#"
                     class="button is-inverted is-primary card-footer-item">Reserve</a>
-                <a href="/car/{{car.id}}" class="button is-inverted is-link card-footer-item">Info</a>
+                <a href="/car/view/{{car.id}}" class="button is-inverted is-link card-footer-item">Info</a>
                 <a href="#" class="button is-inverted is-info card-footer-item">Edit</a>
                 <a href="#" class="button is-inverted is-danger  card-footer-item">Delete</a>
             </footer>
