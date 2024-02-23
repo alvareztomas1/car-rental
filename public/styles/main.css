@@ -1,5 +1,5 @@
 html{
-    background-color: #f5f4f1;
+    background-color: #b6ccd8;
     text-align: center;
 }
 #title{
@@ -19,4 +19,10 @@ html{
 }
 .cars{
     margin: 20px
+}
+.custom-navbar{
+    background-color: #d4eaf7;
+}
+.car-card{
+    background-color: #f5f4f1;
 }

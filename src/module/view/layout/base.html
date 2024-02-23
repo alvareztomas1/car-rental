@@ -6,32 +6,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="/node_modules/bulma/css/bulma.min.css">
   <link rel="stylesheet" type="text/css" href="/styles/main.css">
+
+  
   <title>Car Rental Web</title>
 </head>
 
 <body>
   <br>
+  <nav class="navbar custom-navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://bulma.io">
+        <h1 class="title">Car Rental Web</h1> 
+      </a>
 
-  <nav class="level">
-    <p class="level-item has-text-centered">
-      <a href="/" class="button is-ghost">Home</a>
-    </p>
-    <p class="level-item has-text-centered">
-      <a class="button is-ghost">Add new car</a>
-    </p>
-    <a href="/" class="title is-1">Car Rental Web</a>
-    <p class="level-item has-text-centered">
-      <a class="button is-ghost">Reservations</a>
-    </p>
-    <p class="level-item has-text-centered">
-      <a class="button is-ghost">Reset cars</a>
-    </p>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbar-menu" class="navbar-menu">
+      <div class="navbar-start">
+        <a href="/" class="navbar-item">
+          Home
+        </a>
+        <a href="/car/create" class="navbar-item">
+          Add new car
+        </a>
+        <a class="navbar-item">
+          Reservations
+        </a>
+        <a class="navbar-item">
+          Reset cars
+        </a>
   </nav>
+
+
+  
   {% block body %}{% endblock %}
 
 
 
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+// Get all "navbar-burger" elements
+const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+// Add a click event on each of them
+$navbarBurgers.forEach( el => {
+  el.addEventListener('click', () => {
+
+    // Get the target from the "data-target" attribute
+    const target = el.dataset.target;
+    const $target = document.getElementById(target);
+
+    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+    el.classList.toggle('is-active');
+    $target.classList.toggle('is-active');
+
+  });
+});
+
+});
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // Functions to open and close a modal
@@ -76,5 +116,4 @@
     });
   });
 </script>
-
 </html>
