@@ -17,6 +17,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, "../public")));
 app.use("/node_modules", express.static("node_modules"));
+app.use(express.urlencoded({ extended: true }));
 
 const container = configureDependencyInjectionContainer();
 
