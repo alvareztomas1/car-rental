@@ -1,23 +1,8 @@
 {% extends "view/layout/base.html" %}
 
 {% block body %}
-<div class="columns is-centered">
-    <div class="column is-half">
-        {% for error in errors %}
 
-        <div class="notification is-danger">
-            {{error}}
-        </div>
-        {% endfor %}
-
-        {% for message in messages %}
-        <div class="notification is-success">
-            {{message}}
-        </div>
-
-        {% endfor %}
-    </div>
-</div>
+{% include "car/view/index/content/notification.html" %}
 
 <div id="cars" class="columns is-centered is-multiline cars">
     {% for car in data.cars %}
@@ -25,44 +10,23 @@
         <div id={{car.id}} class="card car-card">
             <header class="card-header">
                 <p class="card-header-title  is-centered">
-                    <img class="car-logo" src={{car.image}} alt="car image">
+                    {% include "car/view/index/content/car-image.html" %}
                 </p>
             </header>
             <div class="card-content">
                 <div class="content is-small">
-
-                    <h1>{{ car.brand }} {{ car.model }} {{ car.year }}</h1>
-                    {% if car.reserved %}
-                    <p><span class="tag is-dark is-medium">Reserved</span></p>
-                    {% else %}
-                    <span class="tag is-success is-medium">{{ car.price }}$ per day</span>
-                    {% endif %}
-
-
-                    <ul>
-                        <li>{{ car.transmission }}</li>
-                        <li>{{ car.fuel }}</li>
-                        <li>{{ car.trunk }} Trunk</li>
-
-                    </ul>
+                    {% include "car/view/index/content/car-name.html" %}
+                    {% include "car/view/index/content/car-state.html" %}
+                    {% include "car/view/index/content/car-features.html" %}
                 </div>
             </div>
             <footer class="card-footer">
-                <a {% if car.reserved %}disabled{% endif %} href="#"
-                    class="button is-inverted is-primary card-footer-item">Reserve</a>
-                <a href="/car/view/{{car.id}}" class="button is-inverted is-link card-footer-item">Info</a>
-                <a href="#" class="button is-inverted is-info card-footer-item">Edit</a>
-                <a href="#" class="button is-inverted is-danger  card-footer-item">Delete</a>
+                {% include "car/view/index/content/car-actions.html" %}
             </footer>
         </div>
 
     </div>
     {% endfor %}
-
-
-
-
-
 </div>
 
 {% endblock %}

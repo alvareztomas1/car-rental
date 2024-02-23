@@ -1,0 +1,17 @@
+<div id="notification" class="columns is-centered">
+    <div class="column is-half">
+        {% for error in errors %}
+
+        <div class="notification is-danger">
+            {{error}}
+        </div>
+        {% endfor %}
+
+        {% for message in messages %}
+        <div class="notification is-success">
+            {{message}}
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
