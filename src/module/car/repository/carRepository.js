@@ -7,7 +7,7 @@ module.exports = class CarRepository extends AbstractRepository {
 		super();
 		this.MainDatabaseAdapter = MainDatabaseAdapter;
 	}
-	async getAll() {
+	getAll() {
 		const cars = this.MainDatabaseAdapter.prepare(
 			`SELECT
 			id, 
@@ -29,7 +29,7 @@ module.exports = class CarRepository extends AbstractRepository {
 
 		return cars.map((carsData) => fromDbToEntity(carsData));
 	}
-	async getById(id) {
+	getById(id) {
 		const car = this.MainDatabaseAdapter.prepare(
 			`SELECT
             id, 
@@ -57,5 +57,53 @@ module.exports = class CarRepository extends AbstractRepository {
 		return fromDbToEntity(car);
 	}
 
+	save(car){
+		
+		let id;
+		const idUpdate = car.id;
 
+		if(idUpdate){
+			// Update car
+		}else{
+			const statement  = `INSERT INTO cars (
+					brand, 
+					model, 
+					car_year, 
+					transmission, 
+					seats, 
+					doors, 
+					air_conditioning, 
+					trunk, 
+					fuel, 
+					price, 
+					unlimited_mileage, 
+					car_image, 
+					car_description, 
+					reserved) 
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+			const values = [
+				car.brand,
+				car.model,
+				car.year,
+				car.transmission,
+				car.seats,
+				car.doors,
+				car.airConditioning,
+				car.trunk,
+				car.fuel,
+				car.price,
+				car.unlimitedMileage,
+				car.image,
+				car.description,
+				car.reserved
+			];
+
+			const result = this.MainDatabaseAdapter.prepare(statement).run(values);
+			id = result.lastInsertRowid;
+
+		}
+
+		return this.getById(id);
+	}
 };
