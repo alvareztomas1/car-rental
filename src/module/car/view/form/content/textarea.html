@@ -1,7 +1,27 @@
-<div class="control">
-    <textarea name="car-description" id="car-description" class="textarea"
+<div class="control has-icons-right">
+    <label class="label">Description</label>
+    <textarea name="car-description" id="car-description"
+        class="textarea {% if validation %} {% if validation.description %} is-success {% else %} is-danger {% endif %} {% endif %}"
         placeholder="A compact sedan known for its reliability, efficiency, and durability. It's popular worldwide and is recognized for its sleek design and spacious interior."
-        required></textarea>
+        required>{{ data.car.description }}</textarea>
+
+    <span class="icon is-small is-right">
+        {% if validation %}
+        {% if validation.description %}
+        <i class="fas fa-check"></i>
+        {% else %}
+        <i class="fas fa-exclamation-triangle"></i>
+        {% endif %}
+        {% endif %}
+    </span>
+
+    <p
+        class="help {% if validation %} {% if not validation.description %} is-danger {% endif %} {% endif %}">
+        {% if validation.description === false %}
+        Invalid description, it must only contain letters, numbers, and the following punctuation characters: , . ! ? ;
+        ( ). The maximum length allowed is 200 characters.
+        {% endif %}
+    </p>
 </div>
 
 <br>

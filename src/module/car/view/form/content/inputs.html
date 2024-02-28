@@ -1,29 +1,82 @@
 <div class="columns">
-    
+
     <div class="column">
         <div class="field">
             <label class="label">Brand</label>
-            <div class="control">
-                <input name="brand" id="brand" class="input" type="text" placeholder="Toyota" required>
+            <div class="control has-icons-right">
+                <input value="{{ data.car.brand }}" name="brand" id="brand"
+                    class="input {% if validation %} {% if validation.brand %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                    type="text" placeholder="Toyota" required>
+                <span class="icon is-small is-right">
+                    {% if validation %}
+                    {% if validation.brand %}
+                    <i class="fas fa-check"></i>
+                    {% else %}
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {% endif %}
+                    {% endif %}
+                </span>
             </div>
+            <p
+                class="help {% if validation %} {% if not validation.brand %} is-danger {% endif %} {% endif %}">
+                {% if validation.brand === false %}
+                Invalid car brand. It must be between 3 and 20 characters. Only numbers, letters and spaces are allowed.
+                {% endif %}
+            </p>
         </div>
+
+
     </div>
 
     <div class="column">
         <div class="field">
             <label class="label">Model</label>
-            <div class="control">
-                <input name="model" id="model" class="input" type="text" placeholder="Corolla" required>
+            <div class="control has-icons-right">
+                <input value="{{ data.car.model }}" name="model" id="model"
+                    class="input {% if validation %} {% if validation.model %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                    type="text" placeholder="Corolla" required>
+                <span class="icon is-small is-right">
+                    {% if validation %}
+                    {% if validation.model %}
+                    <i class="fas fa-check"></i>
+                    {% else %}
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {% endif %}
+                    {% endif %}
+                </span>
             </div>
+            <p
+                class="help {% if validation %} {% if not validation.model %}  is-danger {% endif %} {% endif %}">
+                {% if validation.model === false %}
+                Invalid car model. It must be between 3 and 20 characters. Only numbers, letters, dots, spaces and scripts are allowed.
+                {% endif %}
+            </p>
         </div>
     </div>
 
     <div class="column">
         <div class="field">
             <label class="label">Year</label>
-            <div class="control">
-                <input name="car-year" id="car-year" class="input" type="number" placeholder="2023" required>
+            <div class="control has-icons-right">
+                <input value="{{ data.car.year }}" name="car-year" id="car-year"
+                    class="input {% if validation %} {% if validation.year %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                    type="number" placeholder="2023" required>
+                <span class="icon is-small is-right">
+                    {% if validation %}
+                    {% if validation.year %}
+                    <i class="fas fa-check"></i>
+                    {% else %}
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {% endif %}
+                    {% endif %}
+                </span>
             </div>
+            <p
+                class="help {% if validation %} {% if not validation.year %} is-danger {% endif %} {% endif %}">
+                {% if validation.year === false %}
+                Invalid year. It must be between 1900 and current year.
+                {% endif %}
+            </p>
         </div>
     </div>
 </div>
@@ -34,18 +87,50 @@
     <div class="column">
         <div class="field">
             <label class="label">Price</label>
-            <div class="control">
-                <input name="price" id="price" class="input" type="number" placeholder="40" required>
+            <div class="control has-icons-right">
+                <input value="{{ data.car.price }}" name="price" id="price" class="input {% if validation %} {% if validation.price %} is-success {% else %} is-danger {% endif %} {% endif %}" type="number" placeholder="40"
+                    required>
+                <span class="icon is-small is-right">
+                    {% if validation %}
+                    {% if validation.price %}
+                    <i class="fas fa-check"></i>
+                    {% else %}
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {% endif %}
+                    {% endif %}
+                </span>
             </div>
+            <p
+                class="help {% if validation %} {% if not validation.price %} is-danger {% endif %} {% endif %}">
+                {% if validation.price === false %}
+                Invalid price. It must be between 20$ and 100$.
+                {% endif %}
+            </p>
         </div>
     </div>
 
     <div class="column">
         <div class="field">
-            <label class="label">Trunk</label>
-            <div class="control">
-                <input name="trunk" id="trunk" class="input" type="number" placeholder="470" required>
+            <label class="label">Trunk (liters)</label>
+            <div class="control has-icons-right">
+                <input value="{{ data.car.trunk }}" name="trunk" id="trunk" class="input {% if validation %} {% if validation.trunk %} is-success {% else %} is-danger {% endif %} {% endif %}" type="number"
+                    placeholder="470" required>
+                    <span class="icon is-small is-right">
+                        {% if validation %}
+                        {% if validation.trunk %}
+                        <i class="fas fa-check"></i>
+                        {% else %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% endif %}
+                        {% endif %}
+                    </span>
             </div>
+            <p
+                class="help {% if validation %} {% if not validation.trunk %} is-danger {% endif %} {% endif %}">
+                {% if validation.trunk === false %}
+                Invalid trunk, it must be between 200 and 1500 liters.
+                {% endif %}
+            </p>
         </div>
     </div>
 
