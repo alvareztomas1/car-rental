@@ -94,7 +94,7 @@ module.exports = class CarRepository extends AbstractRepository {
 				car.fuel,
 				car.price,
 				car.unlimitedMileage,
-				car.image,
+				car.image.path,
 				car.description,
 				car.reserved
 			];
