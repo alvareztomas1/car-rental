@@ -16,8 +16,6 @@ module.exports = class CarController extends AbstractController {
 		app.get(`${ROUTE}/view/:id`, this.view.bind(this));
 		app.get(`${ROUTE}/create`, this.create.bind(this));
 		app.post(`${ROUTE}/create`, this.uploadMiddleware.single("image"), this.save.bind(this));
-
-
 	}
 	async index(req, res) {
 		const cars = await this.carService.getAll();
@@ -26,7 +24,7 @@ module.exports = class CarController extends AbstractController {
 		res.render("car/view/index/index.html", { data: { cars }, errors, messages });
 
 		req.session.errors = [];
-		req.session.message = [];
+		req.session.messages = [];
 
 	}
 	async view(req, res) {
@@ -53,21 +51,34 @@ module.exports = class CarController extends AbstractController {
 			const car = fromDataToEntity(req.body);
 
 			if (req.file) {
-				const { path } = req.file;
-				car.image = path.replace("public", "");
-			}
-			const savedCar = await this.carService.save(car);
-
-			if (car.id) {
-				req.session.messages = [`${car.id} edited succesfully`];
-			} else {
-				req.session.messages = [`${savedCar.brand} ${savedCar.model} ${savedCar.year} added succesfully`];
+				const { path, size } = req.file;
+				car.image = { 
+					path: path.replace("public", ""),
+					size: size
+				};
 			}
 
-			res.redirect("/car");
-		} catch (e) {
-			res.render("car/view/form/form.html");
+			const validation = this.carService.validateForm(car);
+			const validationIsSuccess = !Object.values(validation).includes(false);
 
+			if (validationIsSuccess){
+				const savedCar = await this.carService.save(car);
+
+				if (car.id) {
+					req.session.messages = [`${car.id} edited succesfully`];
+				} else {
+					req.session.messages = [`${savedCar.brand} ${savedCar.model} ${savedCar.year} added succesfully`];
+				}
+
+				res.redirect("/car");
+			}
+			else {
+				res.render("car/view/form/form.html", { data: { car }, validation });
+			}
+		}
+		catch (e) {
+			req.session.errors = [e.message, e.stack];
+			res.render("/car");
 		}
 	}
 };
