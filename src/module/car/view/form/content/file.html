@@ -3,7 +3,7 @@
   <div id="file-image"
     class="file has-name is-fullwidth {% if validation %} {% if validation.image === false %} is-danger {% endif %} {% endif %} ">
     <label class="file-label">
-      <input class="file-input" type="file" name="image" id="image" required>
+      <input class="file-input" type="file" name="image" id="image" {% if not data.car.id %}required {% endif %}>
       <span class="file-cta">
         <span class="file-icon">
           <i class="fas fa-upload"></i>
