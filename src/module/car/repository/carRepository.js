@@ -63,7 +63,47 @@ module.exports = class CarRepository extends AbstractRepository {
 		const idUpdate = car.id;
 
 		if(idUpdate){
-			// Update car
+			id = car.id;
+			const statement = `UPDATE cars SET
+				${car.image ? "car_image = ?," : ""}
+				brand = ?,
+				model = ?,
+				car_year = ?,
+				transmission = ?,
+				seats = ?,
+				doors = ?,
+				air_conditioning = ?,
+				trunk = ?,
+				fuel = ?,
+				price = ?,
+				unlimited_mileage = ?,
+				car_description = ?,
+				reserved = ?
+				WHERE id = ?`;
+			
+			const values = [
+				car.brand,
+				car.model,
+				car.year,
+				car.transmission,
+				car.seats,
+				car.doors,
+				car.airConditioning,
+				car.trunk,
+				car.fuel,
+				car.price,
+				car.unlimitedMileage,
+				car.description,
+				car.reserved,
+				car.id
+			];
+
+			if(car.image){
+				values.unshift(car.image.path);
+			}
+
+			this.MainDatabaseAdapter.prepare(statement).run(values);
+
 		}else{
 			const statement  = `INSERT INTO cars (
 					brand, 
