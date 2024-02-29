@@ -23,13 +23,13 @@ module.exports = class Car{
 		this.transmission = transmission;
 		this.seats = seats;
 		this.doors = doors;
-		this.airConditioning = airConditioning;
+		this.airConditioning = Number(airConditioning);
 		this.trunk = trunk;
 		this.fuel = fuel;
 		this.price = price;
-		this.unlimitedMileage = unlimitedMileage;
+		this.unlimitedMileage = Number(unlimitedMileage);
 		this.image = image;
 		this.description = description;
-		this.reserved = reserved;
+		this.reserved = Number(reserved);
 	}
 };
