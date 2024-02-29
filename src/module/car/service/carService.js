@@ -41,7 +41,7 @@ module.exports = class CarService extends AbstractService {
 		switch (type) {
 
 		case "id":
-			return /^(undefined|^[1-9]\d*)$/.test(input);
+			return /^(undefined|^[1-9]\d*|)$/.test(input) && !this.carRepository.getById(input);
 
 		case "brand":
 			return /^[a-zA-Z0-9\s]{3,30}$/.test(input);
@@ -79,10 +79,10 @@ module.exports = class CarService extends AbstractService {
 
 		case "image":
 			maxImageSize = 5 * 1024 * 1024;
-			return /^\\img\\cars\\[0-9]+\.(jpg|jpeg|avif|png)$/.test(String.raw`${input.path}`) && input.size <= maxImageSize;
+			return (input === undefined) || (/^\\img\\cars\\[0-9]+\.(jpg|jpeg|avif|png)$/.test(String.raw`${input.path}`) && input.size <= maxImageSize);
 
 		case "description":
-			return /^[a-zA-Z0-9,.!?;() -]{1,200}$/.test(input);
+			return /^[a-zA-Z0-9,.!?;() '-]{1,200}$/.test(input);
 
 		case "reserved":
 			return /^(0|1)$/.test(input);
