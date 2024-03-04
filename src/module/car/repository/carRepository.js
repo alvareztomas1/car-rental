@@ -56,7 +56,6 @@ module.exports = class CarRepository extends AbstractRepository {
 
 		return fromDbToEntity(car);
 	}
-
 	save(car){
 		
 		let id;
@@ -146,4 +145,18 @@ module.exports = class CarRepository extends AbstractRepository {
 
 		return this.getById(id);
 	}
+	delete(id){
+		const teamBackup = this.getById(id);
+
+		if(teamBackup === undefined){
+			throw new CarNotFoundError("Car with received id not found");
+		}
+
+		const statement = this.MainDatabaseAdapter.prepare("DELETE FROM cars WHERE id = ?");
+
+		statement.run(id);
+
+		return teamBackup;
+	}
+	
 };
