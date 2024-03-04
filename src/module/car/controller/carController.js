@@ -18,6 +18,7 @@ module.exports = class CarController extends AbstractController {
 		app.get(`${ROUTE}/edit/:id`, this.edit.bind(this));
 		app.post(`${ROUTE}/edit/:id`, this.uploadMiddleware.single("image"), this.save.bind(this));
 		app.post(`${ROUTE}/create`, this.uploadMiddleware.single("image"), this.save.bind(this));
+		app.post(`${ROUTE}/delete/:id`, this.delete.bind(this));
 	}
 	async index(req, res) {
 		const cars = await this.carService.getAll();
@@ -99,4 +100,24 @@ module.exports = class CarController extends AbstractController {
 			res.render("/car");
 		}
 	}
+	async delete(req, res){
+		const id = req.params.id;
+
+		if(id === undefined){
+			throw new CarIdNotDefinedError("Car id not defined");
+		}
+
+		try{
+			const deletedTeam = await this.carService.delete(id);
+
+			req.session.messages = [`${deletedTeam.brand} ${deletedTeam.model} ${deletedTeam.year} deleted succesfully`];
+
+			res.redirect("/car");
+		}catch(e){
+			req.session.messages = [e.message, e.stack];
+			res.redirect("/car");
+
+		}
+	}
+	
 };
