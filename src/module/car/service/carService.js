@@ -25,6 +25,13 @@ module.exports = class CarService extends AbstractService {
 		return this.carRepository.save(car);
 	}
 
+	async delete(id) {
+		if (id === undefined) {
+			throw new CarNotDefinedError("Car is not defined");
+		}
+
+		return this.carRepository.delete(id);
+	}
 	validateForm(data) {
 		const validation = {};
 
