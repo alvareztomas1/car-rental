@@ -6,6 +6,7 @@ const path = require("path");
 
 const app = express();
 const { init: initCarModule } = require("./module/car/module");
+const { init: initReserveModule } = require("./module/reserve/module");
 const configureDependencyInjectionContainer = require("./config/di");
 
 nunjucks.configure("src/module", {
@@ -24,6 +25,7 @@ const container = configureDependencyInjectionContainer();
 app.use(container.get("Session"));
 
 initCarModule(app, container);
+initReserveModule(app, container);
 
 const carController = container.get("CarController");
 

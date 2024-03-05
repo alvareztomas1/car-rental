@@ -1,4 +1,5 @@
 const { CarController, CarService, CarRepository } = require("../module/car/module");
+const { ReserveController, ReserveService, ReserveRepository } = require("../module/reserve/module");
 const { default: DIContainer, object, get, factory } = require("rsdi");
 const session = require("express-session");
 const multer = require("multer");
@@ -51,10 +52,19 @@ function addCarModuleDefinitions(container){
 	});
 }
 
+function addReserveModuleDefinitions(container){
+	container.addDefinitions({
+		ReserveController: object(ReserveController).construct(get("CarService"), get("ReserveService")),
+		ReserveService: object(ReserveService).construct(get("ReserveRepository")),
+		ReserveRepository: object(ReserveRepository).construct(get("MainDatabaseAdapter")),
+	});
+}
+
 module.exports = function configureDI(){
 	const container = new DIContainer();
 	addCommonDefinitions(container);
 	addCarModuleDefinitions(container);
+	addReserveModuleDefinitions(container);
 
 	return container;
 };
