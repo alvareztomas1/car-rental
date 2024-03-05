@@ -114,7 +114,7 @@ module.exports = class CarController extends AbstractController {
 
 			res.redirect("/car");
 		}catch(e){
-			req.session.messages = [e.message, e.stack];
+			req.session.errors = [e.message, e.stack];
 			res.redirect("/car");
 
 		}
