@@ -1,22 +1,14 @@
-<div id="{{car.id}}-modal" class="modal">
+<div id="{{car.id}}-delete-modal" class="modal">
     <div class="modal-background"></div>
-    <div class="modal-content">
-        <div class="box">
-
-            <div class="columns">
-                <div class="column">
-                    <p class="subtitle">Sure you want to delete?</p>
-                </div>
-                <div class="column is-one-third">
-                    <div class="field is-grouped">
-                        <form method="POST" action="/car/delete/{{car.id}}">
-                            <button class="button is-danger">Delete</button>
-                        </form>
-                        <a href="/" class="button is-light">Cancel</a>
-                    </div>
-                </div>   
-            </div>
-
-        </div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="subtitle">Sure you want to delete?</p>
+        </header>
+        <footer class="modal-card-foot">
+            <form method="POST" action="/car/delete/{{car.id}}">
+                <button class="button is-danger">Delete</button>
+            </form>
+            <button class="button">Cancel</button>
+        </footer>
     </div>
-  </div>
+</div>
