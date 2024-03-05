@@ -1,4 +1,5 @@
 const AbstractController = require("../../car/controller/abstractController");
+const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 
 module.exports = class ReserveController extends AbstractController {
 	constructor(carService, reserveService) {
@@ -10,6 +11,7 @@ module.exports = class ReserveController extends AbstractController {
 	configureRoutes(app) {
 		const ROUTE = this.ROUTE_BASE;
 		app.get(`${ROUTE}/list`, this.index.bind(this));
+		app.get(`${ROUTE}/:id`, this.create.bind(this));
 
 	}
 
@@ -17,6 +19,21 @@ module.exports = class ReserveController extends AbstractController {
 		res.render("reserve/view/index.html", { pageTitle: "Cars reserves" });
 	}
 
+	async create(req, res) {
+		try{
+			const id = req.params.id;
+			if(id === undefined){
+				throw new CarIdNotDefinedError("Car id not defined");
+			}
+			const car = await this.carService.getById(id);
+
+			res.render("reserve/view/form/form.html", { data: { car }, pageTitle: "Reserve a car" });
+
+		}catch(e){
+			req.session.errors = [e.message, e.stack];
+			res.redirect("/");
+		}
+	}
 	
 
 };
