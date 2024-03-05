@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="/node_modules/bulma/css/bulma.min.css">
   <link rel="stylesheet" type="text/css" href="/styles/main.css">
   <link rel="stylesheet" type="text/css" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
-  
+  <link rel="stylesheet" href="/node_modules/flatpickr/dist/flatpickr.min.css">
   <title>{{ pageTitle }}</title>
 </head>
 
@@ -16,7 +16,7 @@
   <nav class="navbar custom-navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <h1 class="title">Car Rental Web</h1> 
+        <h1 class="title">Car Rental Web</h1>
       </a>
 
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
@@ -34,8 +34,8 @@
         <a href="/car/create" class="navbar-item">
           Add new car
         </a>
-        <a class="navbar-item">
-          Reservations
+        <a href="/reserve/list" class="navbar-item">
+          Reserves
         </a>
         <a class="navbar-item">
           Reset cars
@@ -43,7 +43,8 @@
   </nav>
 
 
-  
+
+
   {% block body %}{% endblock %}
 
 
@@ -52,25 +53,25 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
 
-// Get all "navbar-burger" elements
-const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-// Add a click event on each of them
-$navbarBurgers.forEach( el => {
-  el.addEventListener('click', () => {
+    // Add a click event on each of them
+    $navbarBurgers.forEach(el => {
+      el.addEventListener('click', () => {
 
-    // Get the target from the "data-target" attribute
-    const target = el.dataset.target;
-    const $target = document.getElementById(target);
+        // Get the target from the "data-target" attribute
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
 
-    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-    el.classList.toggle('is-active');
-    $target.classList.toggle('is-active');
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        el.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+
+      });
+    });
 
   });
-});
-
-});
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -125,4 +126,16 @@ $navbarBurgers.forEach( el => {
     }
   }
 </script>
+<script src="/node_modules/flatpickr/dist/flatpickr.min.js"></script>
+<script>
+  flatpickr("#date-start", {
+    dateFormat: "Y-m-d",
+    onClose: function (selectedDates) {
+      flatpickr("#date-end", {
+        minDate: selectedDates[0],
+      });
+    }
+  });
+</script>
+
 </html>
