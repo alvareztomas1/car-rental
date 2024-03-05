@@ -48,7 +48,7 @@ module.exports = class CarService extends AbstractService {
 		switch (type) {
 
 		case "id":
-			return /^(undefined|^[1-9]\d*|)$/.test(input) && !this.carRepository.getById(input);
+			return /^(undefined|^[1-9]\d*|)$/.test(input);
 
 		case "brand":
 			return /^[a-zA-Z0-9\s]{3,30}$/.test(input);
