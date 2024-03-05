@@ -1,0 +1,25 @@
+{% extends "view/layout/base.html" %}
+
+{% block body %}
+<br>
+
+<div class="columns is-centered">
+    <div class="column is-three-fifths">
+        <div class="box">
+            <div class="content">
+                {% include "reserve/view/form/title.html" %}
+                {% include "reserve/view/form/car/price.html" %}
+                {% include "reserve/view/form/car/image.html" %}
+                {% include "reserve/view/form/car/description.html" %}
+                {% include "reserve/view/form/car/features.html" %}
+            </div>
+
+            <form method="POST" action="/reserve/{{data.car.id}}">
+                {% include "reserve/view/form/content.html" %}
+                {% include "reserve/view/form/actions.html" %}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
