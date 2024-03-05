@@ -1,4 +1,5 @@
 const AbstractController = require("../../car/controller/abstractController");
+const { fromDataToEntity } = require("../mapper/reserveMapper");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 
 module.exports = class ReserveController extends AbstractController {
@@ -12,29 +13,48 @@ module.exports = class ReserveController extends AbstractController {
 		const ROUTE = this.ROUTE_BASE;
 		app.get(`${ROUTE}/list`, this.index.bind(this));
 		app.get(`${ROUTE}/:id`, this.create.bind(this));
+		app.post(`${ROUTE}/:id`, this.save.bind(this));
 
 	}
 
-	index (req, res) {
+	index(req, res) {
 		res.render("reserve/view/index.html", { pageTitle: "Cars reserves" });
 	}
 
 	async create(req, res) {
-		try{
+		try {
 			const id = req.params.id;
-			if(id === undefined){
+			if (id === undefined) {
 				throw new CarIdNotDefinedError("Car id not defined");
 			}
 			const car = await this.carService.getById(id);
 
 			res.render("reserve/view/form/form.html", { data: { car }, pageTitle: "Reserve a car" });
 
-		}catch(e){
+		} catch (e) {
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
 		}
 	}
 	
+	async save(req, res) {
+		try {
+			const reserve = fromDataToEntity(req.body);
+			const reserveResult = await this.reserveService.save(reserve);
+			const reservedCar = await this.carService.getById(reserveResult.carId);
 
+			if(reserve.id){
+				req.session.messages = ["Reserved edited succesfully"];
+			}else{
+				req.session.messages = [`${reservedCar.brand} ${reservedCar.model} ${reservedCar.year} reserved succesfully`];
+			}
+
+			res.redirect("/");
+
+		} catch (e) {
+			req.session.errors = [e.message, e.stack];
+			res.redirect("/");
+		}
+	}
 };
 
