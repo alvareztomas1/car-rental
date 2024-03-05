@@ -158,5 +158,15 @@ module.exports = class CarRepository extends AbstractRepository {
 
 		return teamBackup;
 	}
+	reserve(id){
+		const statement = this.MainDatabaseAdapter.prepare(
+			"UPDATE cars SET reserved = 1 WHERE id = ?"
+		);
+		const values = [id];
+
+		statement.run(values);
+
+		return this.getById(id);
+	}
 	
 };
