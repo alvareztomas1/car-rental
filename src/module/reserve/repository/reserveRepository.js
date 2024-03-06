@@ -10,25 +10,72 @@ module.exports = class ReserveRepository extends AbstractRepository {
 	}
 
 
-	/*getById(id) {
-		const reserve = this.mainDataBaseAdapter.prepare(
+	getAll(){
+		const reserves = this.mainDataBaseAdapter.prepare(
 			`SELECT 
-			id,
-			fk_car_id,
-			since,
-			until
-			FROM reserves 
-			WHERE id = ?;`
-		).get(id);
-
-
-		if (reserve === undefined) {
-			throw new ReserveNotFoundError("Reserve not found");
+			reserves.id AS reserve_id,
+			reserves.fk_car_id,
+			reserves.since,
+			reserves.until,
+			cars.id AS car_id,
+			cars.brand,
+			cars.model,
+			cars.car_year,
+			cars.transmission,
+			cars.seats,
+			cars.doors,
+			cars.air_conditioning,
+			cars.trunk,
+			cars.fuel,
+			cars.price,
+			cars.unlimited_mileage,
+			cars.car_image,
+			cars.car_description,
+			cars.reserved
+			FROM reserves
+			JOIN cars
+			ON reserves.fk_car_id = cars.id
+			`).all();
+		
+		if(!reserves.length){
+			return false;
+		}else{
+			const result = reserves.map((reserve) => {
+				const carData = fromDbToCarEntity({
+					id: reserve.car_id,
+					brand: reserve.brand,
+					model: reserve.model,
+					car_year: reserve.car_year,
+					transmission: reserve.transmission,
+					seats: reserve.seats,
+					doors: reserve.doors,
+					air_conditioning: reserve.air_conditioning,
+					trunk: reserve.trunk,
+					fuel: reserve.fuel,
+					price: reserve.price,
+					unlimited_mileage: reserve.unlimited_mileage,
+					car_image: reserve.car_image,
+					car_description: reserve.car_description,
+					reserved: reserve.reserved
+	
+				});
+	
+				const reserveData = {
+					id: reserve.reserve_id,
+					car: carData,
+					since: reserve.since,
+					until: reserve.until
+				};
+				return fromDbToReserveEntity(reserveData);
+			});
+	
+			
+			return result;
 		}
 
-
-		return fromDbToReserveEntity(reserve);
-	}*/
+		
+	
+	}
 	getById(id) {
 		const statement = this.mainDataBaseAdapter.prepare(
 			`SELECT 
