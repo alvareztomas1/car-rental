@@ -1,6 +1,7 @@
 const AbstractRepository = require("./abstractRepository");
 const { fromDbToCarEntity } = require("../mapper/carMapper");
 const CarNotFoundError = require("./error/carNotFoundError");
+const CarIsReservedError = require("./error/carIsReservedError");
 
 module.exports = class CarRepository extends AbstractRepository {
 	constructor(MainDatabaseAdapter) {
@@ -150,6 +151,10 @@ module.exports = class CarRepository extends AbstractRepository {
 
 		if(teamBackup === undefined){
 			throw new CarNotFoundError("Car with received id not found");
+		}
+
+		if(teamBackup.reserved){
+			throw new CarIsReservedError("Car with received id is reserved.");
 		}
 
 		const statement = this.MainDatabaseAdapter.prepare("DELETE FROM cars WHERE id = ?");
