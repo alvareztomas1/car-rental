@@ -21,5 +21,13 @@ module.exports = class ReserveService extends AbstractService {
 		const days = Math.floor((new Date(until) - new Date(since)) / (1000 * 60 * 60 * 24));
 		return Math.floor(days * carPrice);
 	}
+
+	delete(id){
+		if(id === undefined){
+			throw new ReserveNotDefinedError("Reserve is not defined");
+		}
+
+		return this.reserveRepository.delete(id);
+	}
 };
 
