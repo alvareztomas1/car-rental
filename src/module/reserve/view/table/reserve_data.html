@@ -6,6 +6,11 @@
             {{ reserve.reserve.car.model }} {{ reserve.reserve.car.year }}
         </a>
     </td>
+    <td>
+        <figure class="image is-5by3">
+            <img src="{{ reserve.reserve.car.image }}">
+        </figure>
+    </td>
     <td>{{ reserve.reserve.since }}</td>
     <td>{{ reserve.reserve.until }}</td>
     <td><span class="tag is-success is-small">{{ reserve.price }}$</span></td>
