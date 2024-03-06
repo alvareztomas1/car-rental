@@ -1,6 +1,6 @@
 const AbstractController = require("./abstractController");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
-const { fromDataToEntity } = require("../mapper/carMapper");
+const { fromDataToCarEntity } = require("../mapper/carMapper");
 
 module.exports = class CarController extends AbstractController {
 	constructor(uploadMiddleware, carService) {
@@ -67,7 +67,7 @@ module.exports = class CarController extends AbstractController {
 	}
 	async save(req, res) {
 		try {
-			const car = fromDataToEntity(req.body);
+			const car = fromDataToCarEntity(req.body);
 
 			if (req.file) {
 				const { path, size } = req.file;

@@ -1,5 +1,5 @@
 const AbstractRepository = require("./abstractRepository");
-const { fromDbToEntity } = require("../mapper/carMapper");
+const { fromDbToCarEntity } = require("../mapper/carMapper");
 const CarNotFoundError = require("./error/carNotFoundError");
 
 module.exports = class CarRepository extends AbstractRepository {
@@ -27,7 +27,7 @@ module.exports = class CarRepository extends AbstractRepository {
 			reserved FROM cars`
 		).all();
 
-		return cars.map((carsData) => fromDbToEntity(carsData));
+		return cars.map((carsData) => fromDbToCarEntity(carsData));
 	}
 	getById(id) {
 		const car = this.MainDatabaseAdapter.prepare(
@@ -54,7 +54,7 @@ module.exports = class CarRepository extends AbstractRepository {
 			throw new CarNotFoundError("Car not found");
 		}
 
-		return fromDbToEntity(car);
+		return fromDbToCarEntity(car);
 	}
 	save(car){
 		
