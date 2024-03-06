@@ -1,5 +1,6 @@
 const AbstractRepository = require("../../car/repository/abstractRepository");
-const { fromDbToEntity } = require("../mapper/reserveMapper");
+const { fromDbToReserveEntity } = require("../mapper/reserveMapper");
+const { fromDbToCarEntity } = require("../../car/mapper/carMapper");
 const ReserveNotFoundError = require("./error/reserveNotFoundError");
 
 module.exports = class ReserveRepository extends AbstractRepository {
@@ -9,7 +10,7 @@ module.exports = class ReserveRepository extends AbstractRepository {
 	}
 
 
-	getById(id) {
+	/*getById(id) {
 		const reserve = this.mainDataBaseAdapter.prepare(
 			`SELECT 
 			id,
@@ -25,7 +26,69 @@ module.exports = class ReserveRepository extends AbstractRepository {
 			throw new ReserveNotFoundError("Reserve not found");
 		}
 
-		return fromDbToEntity(reserve);
+
+		return fromDbToReserveEntity(reserve);
+	}*/
+	getById(id) {
+		const statement = this.mainDataBaseAdapter.prepare(
+			`SELECT 
+			reserves.id AS reserve_id,
+			reserves.fk_car_id,
+			reserves.since,
+			reserves.until,
+			cars.id AS car_id,
+			cars.brand,
+			cars.model,
+			cars.car_year,
+			cars.transmission,
+			cars.seats,
+			cars.doors,
+			cars.air_conditioning,
+			cars.trunk,
+			cars.fuel,
+			cars.price,
+			cars.unlimited_mileage,
+			cars.car_image,
+			cars.car_description,
+			cars.reserved
+			FROM reserves
+			JOIN cars
+			ON reserves.fk_car_id = cars.id 
+			WHERE reserves.id = ?;`
+		);
+
+		const reserve = statement.get(id);
+
+		if (reserve === undefined) {
+			throw new ReserveNotFoundError("Reserve not found");
+		}
+
+		const carData = fromDbToCarEntity({
+			id: reserve.car_id,
+			brand: reserve.brand,
+			model: reserve.model,
+			car_year: reserve.car_year,
+			transmission: reserve.transmission,
+			seats: reserve.seats,
+			doors: reserve.doors,
+			air_conditioning: reserve.air_conditioning,
+			trunk: reserve.trunk,
+			fuel: reserve.fuel,
+			price: reserve.price,
+			unlimited_mileage: reserve.unlimited_mileage,
+			car_image: reserve.car_image,
+			car_description: reserve.car_description,
+			reserved: reserve.reserved
+		});
+
+		const reserveData = {
+			id: reserve.reserve_id,
+			car: carData,
+			since: reserve.since,
+			until: reserve.until
+		};
+
+		return fromDbToReserveEntity(reserveData);
 	}
 	save(reserve) {
 		let id;
@@ -38,11 +101,11 @@ module.exports = class ReserveRepository extends AbstractRepository {
 			transaction.run();
 
 			const reserveStatement = this.mainDataBaseAdapter.prepare("INSERT OR ROLLBACK INTO reserves (fk_car_id, since, until) VALUES (?, ?, ?);");
-			const reserveStatementValues = [reserve.carId, reserve.since, reserve.until];
+			const reserveStatementValues = [reserve.car.id, reserve.since, reserve.until];
 			reserveStatement.run(reserveStatementValues);
 
 			const reserveCar = this.mainDataBaseAdapter.prepare("UPDATE OR ROLLBACK cars SET reserved = 1 WHERE id = ?;");
-			const reserveCarValues = [reserve.carId];
+			const reserveCarValues = [reserve.car.id];
 			reserveCar.run(reserveCarValues);
 
 			const commitTransaction = this.mainDataBaseAdapter.prepare("COMMIT;");
