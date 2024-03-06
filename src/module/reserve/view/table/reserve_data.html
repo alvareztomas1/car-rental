@@ -1,16 +1,15 @@
 {% for reserve in reserves %}
-        <tr>
-            <td>{{ reserve.reserve.id }}</td>
-            <td>
-                <a href="/car/view/{{reserve.reserve.car.id}}">{{ reserve.reserve.car.brand }}
-                    {{ reserve.reserve.car.model }} {{ reserve.reserve.car.year }}
-                </a>
-            </td>
-            <td>{{ reserve.reserve.since }}</td>
-            <td>{{ reserve.reserve.until }}</td>
-            <td><span class="tag is-success is-small">{{ reserve.price }}$</span></td>
-            <td><a class="button is-link is-small is-light" href="/car/view/{{reserve.reserve.car.id}}">Car info</a></td>
-            <td><a class="button is-info is-small is-light" href="#">Edit</a></td>
-            <td><a class="button is-danger is-small is-light" href="#">Cancel</a></td>
-        </tr>
+<tr>
+    <td>{{ reserve.reserve.id }}</td>
+    <td>
+        <a href="/car/view/{{reserve.reserve.car.id}}">{{ reserve.reserve.car.brand }}
+            {{ reserve.reserve.car.model }} {{ reserve.reserve.car.year }}
+        </a>
+    </td>
+    <td>{{ reserve.reserve.since }}</td>
+    <td>{{ reserve.reserve.until }}</td>
+    <td><span class="tag is-success is-small">{{ reserve.price }}$</span></td>
+    {% include 'reserve/view/table/reserve_actions.html' %}
+</tr>
+{% include 'reserve/view/table/modal.html' %}
 {% endfor %}
