@@ -1,5 +1,5 @@
 const AbstractController = require("../../car/controller/abstractController");
-const { fromDataToEntity } = require("../mapper/reserveMapper");
+const { fromDataToReserveEntity } = require("../mapper/reserveMapper");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 
 module.exports = class ReserveController extends AbstractController {
@@ -39,16 +39,18 @@ module.exports = class ReserveController extends AbstractController {
 	
 	async save(req, res) {
 		try {
-			const reserve = fromDataToEntity(req.body);
-			const reserveResult = await this.reserveService.save(reserve);
-			const reservedCar = await this.carService.getById(reserveResult.carId);
+			const carId = req.body["car-id"];
+			const { since, until } = req.body;
 
+			const car = await this.carService.getById(carId);
+			const reserve = fromDataToReserveEntity({ car, since, until });
+			const reserveResult = await this.reserveService.save(reserve);
+			
 			if(reserve.id){
 				req.session.messages = ["Reserved edited succesfully"];
 			}else{
-				req.session.messages = [`${reservedCar.brand} ${reservedCar.model} ${reservedCar.year} reserved succesfully`];
+				req.session.messages = [`${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} reserved succesfully`];
 			}
-
 			res.redirect("/");
 
 		} catch (e) {
