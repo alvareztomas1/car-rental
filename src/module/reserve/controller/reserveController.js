@@ -14,7 +14,7 @@ module.exports = class ReserveController extends AbstractController {
 		app.get(`${ROUTE}/list`, this.index.bind(this));
 		app.get(`${ROUTE}/:id`, this.create.bind(this));
 		app.post(`${ROUTE}/:id`, this.save.bind(this));
-
+		app.post(`${ROUTE}/delete/:id`, this.delete.bind(this));
 	}
 
 	async index(req, res) {
@@ -64,6 +64,25 @@ module.exports = class ReserveController extends AbstractController {
 			res.redirect("/");
 
 		} catch (e) {
+			req.session.errors = [e.message, e.stack];
+			res.redirect("/");
+		}
+	}
+
+	async delete(req, res){
+		const id = req.params.id;
+
+		if(id === undefined){
+			throw new CarIdNotDefinedError("Car id not defined");
+		}
+
+		try{
+			const deletedReserve = await this.reserveService.delete(id);
+
+			req.session.messages = [`Reserve # ${deletedReserve.id} of ${deletedReserve.car.brand} ${deletedReserve.car.model} ${deletedReserve.car.year} canceled succesfully`];
+
+			res.redirect("/");
+		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
 		}
