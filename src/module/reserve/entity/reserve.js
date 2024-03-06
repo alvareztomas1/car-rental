@@ -1,12 +1,12 @@
 module.exports = class Reserve{
 	constructor({
 		id,
-		carId, 
+		car, 
 		since, 
 		until
 	}){
 		this.id = id;
-		this.carId = carId;
+		this.car = car;
 		this.since = since;
 		this.until = until;
 	}

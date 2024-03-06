@@ -1,33 +1,33 @@
 const Reserve = require("../entity/reserve");
 
-function fromDbToEntity({ 
+function fromDbToReserveEntity({ 
 	id,
-	fk_car_id: carId,
+	car: car,
 	since,
 	until
 }){
 	return new Reserve({
 		id,
-		carId,
+		car,
 		since,
 		until
 	});
 }
-function fromDataToEntity({
+function fromDataToReserveEntity({
 	id,
-	"car-id": carId,
+	car,
 	since,
 	until
 }){
 	return new Reserve({
 		id,
-		carId,
+		car,
 		since,
 		until
 	});
 }
 
 module.exports = {
-	fromDbToEntity,
-	fromDataToEntity
+	fromDbToReserveEntity,
+	fromDataToReserveEntity
 };
