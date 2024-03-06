@@ -163,5 +163,30 @@ module.exports = class ReserveRepository extends AbstractRepository {
 
 		return this.getById(id);
 	}
+
+	delete(id) {
+		const reserve = this.getById(id);
+
+		if(reserve === undefined){
+			throw new ReserveNotFoundError("Reserve not found");
+		}
+
+	
+		const transaction = this.mainDataBaseAdapter.prepare("BEGIN TRANSACTION;");
+		transaction.run();
+
+		const deleteReserveStatement = this.mainDataBaseAdapter.prepare("DELETE FROM reserves WHERE id = ?;");
+		const deleteReserveStatementValues = [id];
+		deleteReserveStatement.run(deleteReserveStatementValues);
+
+		const unreserveCarStatement= this.mainDataBaseAdapter.prepare("UPDATE cars SET reserved = 0 WHERE id = ?;");
+		const unreserveCarStatementValues = [reserve.car.id];
+		unreserveCarStatement.run(unreserveCarStatementValues);
+
+		const commitTransaction = this.mainDataBaseAdapter.prepare("COMMIT;");
+		commitTransaction.run();
+
+		return reserve;
+	}
 };
 
