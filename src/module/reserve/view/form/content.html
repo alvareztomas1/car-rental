@@ -3,7 +3,7 @@
         <div class="field">
             <label class="label">Select a start date</label>
             <div class="control">
-                <input name="since" id="date-start" class="input" type="text" placeholder="Since" required>
+                <input value="{{ reserve.since }}" name="since" id="date-start" class="input" type="text" placeholder="Since" required>
             </div>
             {% if validation.since === false %}
                 <p class="help is-danger">Invalid date</p>
@@ -14,7 +14,7 @@
         <div class="field">
             <label class="label">Select an end date</label>
             <div class="control">
-                <input name="until" id="date-end" class="input" type="text" placeholder="Until" required>
+                <input value="{{ reserve.until }}" name="until" id="date-end" class="input" type="text" placeholder="Until" required>
             </div>
             {% if validation.until === false %}
                 <p class="help is-danger">Invalid date</p>
@@ -23,4 +23,4 @@
     </div>
 </div>
 
-<input class="is-hidden" type="hidden" name="car-id" value="{{ data.car.id }}">
+<input class="is-hidden" type="hidden" name="id" value="{{ reserve.id }}">
