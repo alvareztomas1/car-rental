@@ -1,6 +1,7 @@
 const AbstractController = require("../../car/controller/abstractController");
 const { fromDataToReserveEntity } = require("../mapper/reserveMapper");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
+const ReserveIdNotDefinedError = require("./error/reserveIdNotDefinedError");
 
 module.exports = class ReserveController extends AbstractController {
 	constructor(carService, reserveService) {
@@ -88,7 +89,7 @@ module.exports = class ReserveController extends AbstractController {
 		const id = req.params.id;
 
 		if(id === undefined){
-			throw new CarIdNotDefinedError("Car id not defined");
+			throw new ReserveIdNotDefinedError("Reserve id not defined");
 		}
 
 		try{
@@ -102,6 +103,8 @@ module.exports = class ReserveController extends AbstractController {
 			res.redirect("/");
 		}
 	}
+
+	
 
 };
 
