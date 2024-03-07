@@ -16,6 +16,7 @@ module.exports = class ReserveController extends AbstractController {
 		app.get(`${ROUTE}/:id`, this.create.bind(this));
 		app.post(`${ROUTE}/:id`, this.save.bind(this));
 		app.post(`${ROUTE}/delete/:id`, this.delete.bind(this));
+		app.get(`${ROUTE}/edit/:id`, this.edit.bind(this));
 	}
 
 	async index(req, res) {
@@ -104,7 +105,24 @@ module.exports = class ReserveController extends AbstractController {
 		}
 	}
 
-	
+	async edit(req, res){
+		const id = req.params.id;
+
+		if(id === undefined){
+			throw new ReserveIdNotDefinedError("Reserve id not defined");
+		}
+
+		try{
+			const reserve = await this.reserveService.getById(id);
+			const car = reserve.car;
+			
+			res.render("reserve/view/form/form.html", { data: { car }, reserve, pageTitle: "Reserve a car" });	
+		}catch(e){
+			req.session.errors = [e.message, e.stack];
+			res.redirect("/");
+		}
+		
+	}
 
 };
 
