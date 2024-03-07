@@ -36,19 +36,18 @@ module.exports = class CarService extends AbstractService {
 		const validation = {};
 
 		Object.keys(data).forEach((key) => {
-			validation[`${key}`] = this.validateInput(key, data[key]);
+			validation[`${key}`] = this.validateField(key, data[key]);
 		});
 
 		return validation;
 	}
 
-	validateInput(type, input) {
-		let actualYear;
-		let maxImageSize;
+	validateField(type, input) {
+
 		switch (type) {
 
 		case "id":
-			return /^(undefined|^[1-9]\d*|)$/.test(input);
+			return input === "" || !!this.getById(input);
 
 		case "brand":
 			return /^[a-zA-Z0-9\s]{3,30}$/.test(input);
@@ -56,10 +55,12 @@ module.exports = class CarService extends AbstractService {
 		case "model":
 			return /^([A-Za-z0-9\- .]{3,30})$/.test(input);
 
-		case "year":
+		case "year":{
+			let actualYear;
 			actualYear = new Date().getFullYear();
 			return input >= 1900 && input <= actualYear;
-
+		}
+			
 		case "transmission":
 			return /^(Automatic|Manual)$/.test(input);
 
@@ -84,10 +85,12 @@ module.exports = class CarService extends AbstractService {
 		case "unlimitedMileage":
 			return /^(0|1)$/.test(input);
 
-		case "image":
+		case "image":{
+			let maxImageSize;
 			maxImageSize = 5 * 1024 * 1024;
 			return (input === undefined) || (/^\\img\\cars\\[0-9]+\.(jpg|jpeg|avif|png)$/.test(String.raw`${input.path}`) && input.size <= maxImageSize);
-
+		}
+			
 		case "description":
 			return /^[a-zA-Z0-9,.!?;() '-]{1,200}$/.test(input);
 
