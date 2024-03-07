@@ -2,9 +2,10 @@ const AbstractService = require("../../car/service/abstractService");
 const ReserveNotDefinedError = require("./error/reserveNotDefinedError");
 
 module.exports = class ReserveService extends AbstractService {
-	constructor(reserveRepository) {
+	constructor(reserveRepository, carService) {
 		super();
 		this.reserveRepository = reserveRepository;
+		this.carService = carService;
 	}
 	getAll(){
 		return this.reserveRepository.getAll();
@@ -38,7 +39,6 @@ module.exports = class ReserveService extends AbstractService {
 	}
 
 	validate(data){
-
 		const validation = {};
 
 		Object.keys(data).forEach((field) => {
@@ -55,9 +55,15 @@ module.exports = class ReserveService extends AbstractService {
 			return this.validateDate(input);
 		case "until":
 			return this.validateDate(input);
-		case "id":
-			return /^(undefined|^[1-9]\d*|)$/.test(input);
+		case "id":{
+			return input === "" || !!this.getById(input);
 		}
+		case "carId":{
+			return !!this.carService.getById(input);
+		}		
+		}
+		
+		
 	}
 
 	validateDate(date){
