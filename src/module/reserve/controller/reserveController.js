@@ -49,19 +49,26 @@ module.exports = class ReserveController extends AbstractController {
 	
 	async save(req, res) {
 		try {
-			const carId = req.params.id;
 			const { since, until, id } = req.body;
-			const car = await this.carService.getById(carId);
+			const carId = req.body["car-id"];
 
-			const validation = this.reserveService.validate(req.body);
+			const reserveData = {
+				id,
+				since,
+				until,
+				carId
+			};
+
+			const car = await this.carService.getById(carId);
+			const validation = this.reserveService.validate(reserveData);
 			const validationIsSuccess = !Object.values(validation).includes(false);
 
 			if (validationIsSuccess) {
-				const reserve = fromDataToReserveEntity({ car, since, until });
+				const reserve = fromDataToReserveEntity({ id, car, since, until });
 				const reserveResult = await this.reserveService.save(reserve);
 				
 				if(id){
-					req.session.messages = ["Reserved edited succesfully"];
+					req.session.messages = [`Reserve #${reserveResult.id} of ${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} edited succesfully`];
 				}else{
 					req.session.messages = [`${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} reserved succesfully`];
 				}
