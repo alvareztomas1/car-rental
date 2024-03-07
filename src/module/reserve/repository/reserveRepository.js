@@ -140,9 +140,25 @@ module.exports = class ReserveRepository extends AbstractRepository {
 	save(reserve) {
 		let id;
 		const isUpdate = reserve.id;
-
+		
 		if (isUpdate) {
-			// TODO: EDIT RESERVE
+			id = reserve.id;
+
+			const statement = this.mainDataBaseAdapter.prepare(
+				`UPDATE reserves SET
+				fk_car_id = ?,
+				since = ?,
+				until = ?
+				WHERE id = ?`
+			);
+			const values = [
+				reserve.car.id,
+				reserve.since,
+				reserve.until,
+				id
+			];
+
+			statement.run(values);
 		} else {
 			const transaction = this.mainDataBaseAdapter.prepare("BEGIN TRANSACTION;");
 			transaction.run();
@@ -163,7 +179,6 @@ module.exports = class ReserveRepository extends AbstractRepository {
 
 		return this.getById(id);
 	}
-
 	delete(id) {
 		const reserve = this.getById(id);
 
@@ -188,5 +203,6 @@ module.exports = class ReserveRepository extends AbstractRepository {
 
 		return reserve;
 	}
+
 };
 
