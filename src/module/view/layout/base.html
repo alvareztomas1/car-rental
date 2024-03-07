@@ -8,6 +8,7 @@
   <link rel="stylesheet" type="text/css" href="/styles/main.css">
   <link rel="stylesheet" type="text/css" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" href="/node_modules/flatpickr/dist/flatpickr.min.css">
+  <link rel="icon" type="image/png" href="/logo/favicon.png">
   <title>{{ pageTitle }}</title>
 </head>
 
@@ -128,11 +129,19 @@
 </script>
 <script src="/node_modules/flatpickr/dist/flatpickr.min.js"></script>
 <script>
+  var currentDate = new Date();
+
+  var maxDate = new Date();
+  maxDate.setFullYear(currentDate.getFullYear() + 1);
+
   flatpickr("#date-start", {
     dateFormat: "Y-m-d",
+    minDate: "today", 
+    maxDate: maxDate, 
     onClose: function (selectedDates) {
       flatpickr("#date-end", {
         minDate: selectedDates[0],
+        maxDate: maxDate 
       });
     }
   });
