@@ -51,17 +51,25 @@ module.exports = class ReserveController extends AbstractController {
 		try {
 			const carId = req.body["car-id"];
 			const { since, until } = req.body;
-
 			const car = await this.carService.getById(carId);
-			const reserve = fromDataToReserveEntity({ car, since, until });
-			const reserveResult = await this.reserveService.save(reserve);
-			
-			if(reserve.id){
-				req.session.messages = ["Reserved edited succesfully"];
+
+			const validation = this.reserveService.validate(req.body);
+			const validationIsSuccess = !Object.values(validation).includes(false);
+
+			if (validationIsSuccess) {
+				const reserve = fromDataToReserveEntity({ car, since, until });
+				const reserveResult = await this.reserveService.save(reserve);
+
+				if(reserve.id){
+					req.session.messages = ["Reserved edited succesfully"];
+				}else{
+					req.session.messages = [`${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} reserved succesfully`];
+				}
+				res.redirect("/");
 			}else{
-				req.session.messages = [`${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} reserved succesfully`];
+				res.render("reserve/view/form/form.html", { data: { car }, validation, pageTitle: "Reserve a car" });
 			}
-			res.redirect("/");
+			
 
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
