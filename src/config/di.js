@@ -55,7 +55,7 @@ function addCarModuleDefinitions(container){
 function addReserveModuleDefinitions(container){
 	container.addDefinitions({
 		ReserveController: object(ReserveController).construct(get("CarService"), get("ReserveService")),
-		ReserveService: object(ReserveService).construct(get("ReserveRepository")),
+		ReserveService: object(ReserveService).construct(get("ReserveRepository"), get("CarService")),
 		ReserveRepository: object(ReserveRepository).construct(get("MainDatabaseAdapter")),
 	});
 }
