@@ -2,13 +2,19 @@ const AbstractService = require("../../car/service/abstractService");
 const ReserveNotDefinedError = require("./error/reserveNotDefinedError");
 
 module.exports = class ReserveService extends AbstractService {
-	constructor(reserveRepository, carService) {
+	constructor(reserveRepository) {
 		super();
 		this.reserveRepository = reserveRepository;
-		this.carService = carService;
 	}
 	getAll(){
 		return this.reserveRepository.getAll();
+	}
+	getById(id){
+		if(id === undefined){
+			throw new ReserveNotDefinedError("Reserve is not defined");
+		}
+
+		return this.reserveRepository.getById(id);
 	}
 	save(reserve) {
 		if(reserve === undefined){
@@ -49,8 +55,8 @@ module.exports = class ReserveService extends AbstractService {
 			return this.validateDate(input);
 		case "until":
 			return this.validateDate(input);
-		case "car-id":
-			return this.carService.getById(input) ? true : false;
+		case "id":
+			return /^(undefined|^[1-9]\d*|)$/.test(input);
 		}
 	}
 
