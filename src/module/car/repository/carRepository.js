@@ -24,8 +24,8 @@ module.exports = class CarRepository extends AbstractRepository {
 			price, 
 			unlimited_mileage, 
 			car_image, 
-			car_description, 
-			reserved FROM cars`
+			car_description 
+			FROM cars`
 		).all();
 
 		return cars.map((carsData) => fromDbToCarEntity(carsData));
@@ -46,8 +46,8 @@ module.exports = class CarRepository extends AbstractRepository {
             price, 
             unlimited_mileage, 
             car_image, 
-            car_description, 
-            reserved FROM cars
+            car_description 
+            FROM cars
             WHERE id = ?`
 		).get(id);
 
@@ -77,8 +77,7 @@ module.exports = class CarRepository extends AbstractRepository {
 				fuel = ?,
 				price = ?,
 				unlimited_mileage = ?,
-				car_description = ?,
-				reserved = ?
+				car_description = ?
 				WHERE id = ?`;
 			
 			const values = [
@@ -94,7 +93,6 @@ module.exports = class CarRepository extends AbstractRepository {
 				car.price,
 				car.unlimitedMileage,
 				car.description,
-				car.reserved,
 				car.id
 			];
 
@@ -118,9 +116,8 @@ module.exports = class CarRepository extends AbstractRepository {
 					price, 
 					unlimited_mileage, 
 					car_image, 
-					car_description, 
-					reserved) 
-					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+					car_description) 
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 			const values = [
 				car.brand,
@@ -135,8 +132,7 @@ module.exports = class CarRepository extends AbstractRepository {
 				car.price,
 				car.unlimitedMileage,
 				car.image.path,
-				car.description,
-				car.reserved
+				car.description
 			];
 
 			const result = this.MainDatabaseAdapter.prepare(statement).run(values);
@@ -153,9 +149,7 @@ module.exports = class CarRepository extends AbstractRepository {
 			throw new CarNotFoundError("Car with received id not found");
 		}
 
-		if(teamBackup.reserved){
-			throw new CarIsReservedError("Car with received id is reserved.");
-		}
+		// TODO: check if car is reserved
 
 		const statement = this.MainDatabaseAdapter.prepare("DELETE FROM cars WHERE id = ?");
 

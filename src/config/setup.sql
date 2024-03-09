@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS cars (
     unlimited_mileage INTEGER CHECK (unlimited_mileage IN (0, 1)),
     car_image TEXT NOT NULL,
     car_description TEXT NOT NULL,
-    reserved INTEGER CHECK (reserved IN (0, 1)),
     created_at DATE DEFAULT (datetime('now', 'localtime')) NOT NULL,
     updated_at DATE DEFAULT (datetime('now', 'localtime')) NOT NULL
 );

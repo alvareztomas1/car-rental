@@ -14,7 +14,6 @@ module.exports = class Car{
 		unlimitedMileage, 
 		image, 
 		description,
-		reserved
 	}){
 		this.id = id;
 		this.brand = brand;
@@ -30,6 +29,5 @@ module.exports = class Car{
 		this.unlimitedMileage = Number(unlimitedMileage);
 		this.image = image;
 		this.description = description;
-		this.reserved = Number(reserved);
 	}
 };

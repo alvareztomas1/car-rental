@@ -94,8 +94,6 @@ module.exports = class CarService extends AbstractService {
 		case "description":
 			return /^[a-zA-Z0-9,.!?;() '-]{1,200}$/.test(input);
 
-		case "reserved":
-			return /^(0|1)$/.test(input);
 		}
 	}
 };

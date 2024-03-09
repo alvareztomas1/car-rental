@@ -14,7 +14,6 @@ function fromDbToCarEntity({
 	unlimited_mileage: unlimitedMileage,
 	car_image: image,
 	car_description: description,
-	reserved
 }) {
 	return new Car({
 		id,
@@ -31,7 +30,6 @@ function fromDbToCarEntity({
 		unlimitedMileage,
 		image,
 		description,
-		reserved
 	});
 }
 function fromDataToCarEntity({
@@ -49,7 +47,6 @@ function fromDataToCarEntity({
 	"unlimited-mileage": unlimitedMileage,
 	image,
 	"car-description": description,
-	reserved
 }) {
 	return new Car({
 		id,
@@ -66,7 +63,6 @@ function fromDataToCarEntity({
 		unlimitedMileage,
 		image,
 		description,
-		reserved
 	});
 }
 

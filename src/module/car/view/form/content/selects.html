@@ -1,32 +1,4 @@
 <div class="columns">
-    <div class="column">
-        <div class="field">
-            <label class="label">Reserved</label>
-            <div class="control">
-                <div class="select">
-                    <select name="reserved" id="reserved">
-                        <option value="0" {% if data.car.reserved === 0 %} selected {% endif %}>No</option>
-                        <option value="1" {% if data.car.reserved === 1 %} selected {% endif %}>Yes</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <p
-            class="help {% if validation %} {% if not validation.reserved %}  is-danger {% endif %} {% endif %}">
-            {% if validation.reserved === false %}
-            Invalid reserved option. You must select a valid one.
-            {% endif %}
-        </p>
-        <span class="icon is-small is-right">
-            {% if validation %}
-            {% if validation.reserved %}
-            <i class="fas fa-check"></i>
-            {% else %}
-            <i class="fas fa-exclamation-triangle"></i>
-            {% endif %}
-            {% endif %}
-        </span>
-    </div>
 
     <div class="column">
         <div class="field">
