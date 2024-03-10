@@ -1,159 +1,65 @@
 const AbstractRepository = require("./abstractRepository");
-const { fromDbToCarEntity } = require("../mapper/carMapper");
+const { fromModelToCarEntity } = require("../mapper/carMapper");
 const CarNotFoundError = require("./error/carNotFoundError");
-const CarIsReservedError = require("./error/carIsReservedError");
+// const CarIsReservedError = require("./error/carIsReservedError");
 
 module.exports = class CarRepository extends AbstractRepository {
-	constructor(MainDatabaseAdapter) {
+	constructor(carModel) {
 		super();
-		this.MainDatabaseAdapter = MainDatabaseAdapter;
+		this.carModel = carModel;
 	}
-	getAll() {
-		const cars = this.MainDatabaseAdapter.prepare(
-			`SELECT
-			id, 
-			brand, 
-			model, 
-			car_year, 
-			transmission, 
-			seats, 
-			doors, 
-			air_conditioning, 
-			trunk, 
-			fuel, 
-			price, 
-			unlimited_mileage, 
-			car_image, 
-			car_description 
-			FROM cars`
-		).all();
-
-		return cars.map((carsData) => fromDbToCarEntity(carsData));
+	async getAll() {
+		const cars = await this.carModel.findAll();
+		return cars.map((carData) => fromModelToCarEntity(carData));
 	}
-	getById(id) {
-		const car = this.MainDatabaseAdapter.prepare(
-			`SELECT
-            id, 
-            brand, 
-            model, 
-            car_year, 
-            transmission, 
-            seats, 
-            doors, 
-            air_conditioning, 
-            trunk, 
-            fuel, 
-            price, 
-            unlimited_mileage, 
-            car_image, 
-            car_description 
-            FROM cars
-            WHERE id = ?`
-		).get(id);
+	async getById(id) {
+		const car = await this.carModel.findByPk(id);
 
 		if (car === undefined) {
 			throw new CarNotFoundError("Car not found");
 		}
-
-		return fromDbToCarEntity(car);
-	}
-	save(car){
 		
-		let id;
-		const idUpdate = car.id;
-
-		if(idUpdate){
-			id = car.id;
-			const statement = `UPDATE cars SET
-				${car.image ? "car_image = ?," : ""}
-				brand = ?,
-				model = ?,
-				car_year = ?,
-				transmission = ?,
-				seats = ?,
-				doors = ?,
-				air_conditioning = ?,
-				trunk = ?,
-				fuel = ?,
-				price = ?,
-				unlimited_mileage = ?,
-				car_description = ?
-				WHERE id = ?`;
-			
-			const values = [
-				car.brand,
-				car.model,
-				car.year,
-				car.transmission,
-				car.seats,
-				car.doors,
-				car.airConditioning,
-				car.trunk,
-				car.fuel,
-				car.price,
-				car.unlimitedMileage,
-				car.description,
-				car.id
-			];
-
-			if(car.image){
-				values.unshift(car.image.path);
-			}
-
-			this.MainDatabaseAdapter.prepare(statement).run(values);
-
-		}else{
-			const statement  = `INSERT INTO cars (
-					brand, 
-					model, 
-					car_year, 
-					transmission, 
-					seats, 
-					doors, 
-					air_conditioning, 
-					trunk, 
-					fuel, 
-					price, 
-					unlimited_mileage, 
-					car_image, 
-					car_description) 
-					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-			const values = [
-				car.brand,
-				car.model,
-				car.year,
-				car.transmission,
-				car.seats,
-				car.doors,
-				car.airConditioning,
-				car.trunk,
-				car.fuel,
-				car.price,
-				car.unlimitedMileage,
-				car.image.path,
-				car.description
-			];
-
-			const result = this.MainDatabaseAdapter.prepare(statement).run(values);
-			id = result.lastInsertRowid;
-
-		}
-
-		return this.getById(id);
+		return fromModelToCarEntity(car);
 	}
-	delete(id){
-		const teamBackup = this.getById(id);
+	async save(car){
 
-		if(teamBackup === undefined){
+		const carModelToSave = {
+			id: car.id ? car.id : undefined,
+			brand: car.brand,
+			model: car.model,
+			car_year: car.year,
+			transmission: car.transmission,
+			seats: car.seats,
+			doors: car.doors,
+			air_conditioning: car.airConditioning,
+			trunk: car.trunk,
+			fuel: car.fuel,
+			price: car.price,
+			unlimited_mileage: car.unlimitedMileage,
+			car_image: car.image ? car.image.path : undefined,
+			car_description: car.description
+		};
+
+		const buildOptions = {
+			isNewRecord: !carModelToSave.id
+		};
+		
+		let carModel;
+		carModel = this.carModel.build(carModelToSave, buildOptions);
+		carModel = await carModel.save();
+
+		return fromModelToCarEntity(carModel);
+
+	}
+	async delete(id){
+		const teamBackup = await this.getById(id);
+		const deletedTeam = await this.carModel.destroy({ where: { id } });
+
+		if(deletedTeam === undefined){
 			throw new CarNotFoundError("Car with received id not found");
 		}
 
 		// TODO: check if car is reserved
-
-		const statement = this.MainDatabaseAdapter.prepare("DELETE FROM cars WHERE id = ?");
-
-		statement.run(id);
 
 		return teamBackup;
 	}

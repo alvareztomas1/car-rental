@@ -1,5 +1,5 @@
 const Car = require("../entity/car");
-function fromDbToCarEntity({
+function fromModelToCarEntity({
 	id,
 	brand,
 	model,
@@ -67,6 +67,6 @@ function fromDataToCarEntity({
 }
 
 module.exports = {
-	fromDbToCarEntity,
+	fromModelToCarEntity,
 	fromDataToCarEntity
 };
