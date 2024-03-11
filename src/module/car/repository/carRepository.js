@@ -1,12 +1,13 @@
 const AbstractRepository = require("./abstractRepository");
 const { fromModelToCarEntity } = require("../mapper/carMapper");
 const CarNotFoundError = require("./error/carNotFoundError");
-// const CarIsReservedError = require("./error/carIsReservedError");
+const CarIsReservedError = require("./error/carIsReservedError");
 
 module.exports = class CarRepository extends AbstractRepository {
-	constructor(carModel) {
+	constructor(carModel, reserveModel) {
 		super();
 		this.carModel = carModel;
+		this.reserveModel = reserveModel;
 	}
 	async getAll() {
 		const cars = await this.carModel.findAll({
@@ -57,13 +58,17 @@ module.exports = class CarRepository extends AbstractRepository {
 	}
 	async delete(id){
 		const teamBackup = await this.getById(id);
+		const teamIsReserved = await this.reserveModel.findOne({ where: { fk_car_id: id } });
+
+		if(teamIsReserved){
+			throw new CarIsReservedError("Car is reserved");
+		}
+
 		const deletedTeam = await this.carModel.destroy({ where: { id } });
 
 		if(deletedTeam === undefined){
 			throw new CarNotFoundError("Car with received id not found");
 		}
-
-		// TODO: check if car is reserved
 
 		return teamBackup;
 	}

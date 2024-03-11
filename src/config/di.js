@@ -63,7 +63,7 @@ function addCarModuleDefinitions(container){
 	container.addDefinitions({
 		CarController: object(CarController).construct(get("Multer"), get("CarService")),
 		CarService: object(CarService).construct(get("CarRepository")),
-		CarRepository: object(CarRepository).construct(get("CarModel")),
+		CarRepository: object(CarRepository).construct(get("CarModel"), get("ReserveModel")),
 		CarModel: factory(configureCarModel),
 	});
 }
