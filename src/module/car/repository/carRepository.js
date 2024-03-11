@@ -9,17 +9,22 @@ module.exports = class CarRepository extends AbstractRepository {
 		this.carModel = carModel;
 	}
 	async getAll() {
-		const cars = await this.carModel.findAll();
-		return cars.map((carData) => fromModelToCarEntity(carData));
+		const cars = await this.carModel.findAll({
+			attributes: { exclude: ["created_at", "updated_at"] },
+		});
+
+		return cars.map((carData) => fromModelToCarEntity(carData.toJSON()));
 	}
 	async getById(id) {
-		const car = await this.carModel.findByPk(id);
-
+		const car = await this.carModel.findByPk(id, {
+			attributes: { exclude: ["created_at", "updated_at"] },
+		});
+		
 		if (car === undefined) {
 			throw new CarNotFoundError("Car not found");
 		}
 		
-		return fromModelToCarEntity(car);
+		return fromModelToCarEntity(car.toJSON());
 	}
 	async save(car){
 
@@ -47,7 +52,6 @@ module.exports = class CarRepository extends AbstractRepository {
 		let carModel;
 		carModel = this.carModel.build(carModelToSave, buildOptions);
 		carModel = await carModel.save();
-
 		return fromModelToCarEntity(carModel);
 
 	}
