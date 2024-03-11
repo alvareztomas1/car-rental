@@ -120,7 +120,7 @@ module.exports = class ReserveController extends AbstractController {
 			const reserve = await this.reserveService.getById(id);
 			const car = reserve.car;
 			
-			res.render("reserve/view/form/form.html", { data: { car }, reserve, pageTitle: "Reserve a car" });	
+			res.render("reserve/view/form/form.html", { car, reserve, pageTitle: "Reserve a car" });	
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
