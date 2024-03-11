@@ -27,7 +27,7 @@ module.exports = class ReserveService extends AbstractService {
 
 	calculateCost(since, until, carPrice){
 		const days = Math.floor((new Date(until) - new Date(since)) / (1000 * 60 * 60 * 24));
-		return Math.floor(days * carPrice);
+		return Math.floor((days === 0 ? 1 : days) * carPrice);
 	}
 
 	delete(id){
@@ -60,7 +60,9 @@ module.exports = class ReserveService extends AbstractService {
 		}
 		case "carId":{
 			return !!this.carService.getById(input);
-		}		
+		}	
+		case "paymentMethod":
+			return /^(Cash|Paypal|Credit card|Debit card)$/.test(input);	
 		}
 		
 		
