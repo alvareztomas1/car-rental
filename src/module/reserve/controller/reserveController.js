@@ -20,17 +20,9 @@ module.exports = class ReserveController extends AbstractController {
 	}
 
 	async index(req, res) {
-		const data = await this.reserveService.getAll();
-		
-		const reserves = data ? data.map((reserve) => {
-			return {
-				reserve,
-				price: this.reserveService.calculateCost(reserve.since, reserve.until, reserve.car.price)
-			};
-		}) : false;
+		const reserves = await this.reserveService.getAll();
 
-		
-		res.render("reserve/view/index.html", { reserves, pageTitle: "Cars reserves" });
+		res.render("reserve/view/index.html", { reserves: reserves ? reserves : false, pageTitle: "Cars reserves" });
 	}
 
 	async create(req, res) {
