@@ -33,7 +33,7 @@ module.exports = class ReserveController extends AbstractController {
 			}
 			const car = await this.carService.getById(id);
 
-			res.render("reserve/view/form/form.html", { data: { car }, pageTitle: "Reserve a car" });
+			res.render("reserve/view/form/form.html", { car, pageTitle: "Reserve a car" });
 
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
@@ -46,32 +46,44 @@ module.exports = class ReserveController extends AbstractController {
 			const { since, until, id } = req.body;
 			const carId = req.body["car-id"];
 
-			const reserveData = {
+			const dataToValidate = {
 				id,
+				carId,
 				since,
 				until,
-				carId
+				paymentMethod: req.body["payment-method"]
+			};
+			
+			const car = await this.carService.getById(carId);
+
+			const reserveData = {
+				id, 
+				car, 
+				since, 
+				until,
+				pricePerDay: car.price,
+				totalPrice: this.reserveService.calculateCost(since, until, car.price),
+				payed: dataToValidate.paymentMethod === "Cash" ? false : true,
+				paymentMethod: dataToValidate.paymentMethod 
 			};
 
-			const car = await this.carService.getById(carId);
-			const validation = this.reserveService.validate(reserveData);
+			const reserve = fromDataToReserveEntity(reserveData);
+			const validation = this.reserveService.validate(dataToValidate);
 			const validationIsSuccess = !Object.values(validation).includes(false);
 
 			if (validationIsSuccess) {
-				const reserve = fromDataToReserveEntity({ id, car, since, until });
-				const reserveResult = await this.reserveService.save(reserve);
-				
+				const savedReserve = await this.reserveService.save(reserve);
+
 				if(id){
-					req.session.messages = [`Reserve #${reserveResult.id} of ${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} edited succesfully`];
+					req.session.messages = [`Reserve #${savedReserve.id} of ${savedReserve.car.brand} ${savedReserve.car.model} ${savedReserve.car.year} edited succesfully`];
 				}else{
-					req.session.messages = [`${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} reserved succesfully`];
+					req.session.messages = [`${savedReserve.car.brand} ${savedReserve.car.model} ${savedReserve.car.year} reserved succesfully`];
 				}
+
 				res.redirect("/");
 			}else{
-				res.render("reserve/view/form/form.html", { data: { car }, validation, pageTitle: "Reserve a car" });
+				res.render("reserve/view/form/form.html", { car, reserve, validation, pageTitle: "Reserve a car" });
 			}
-			
-
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
