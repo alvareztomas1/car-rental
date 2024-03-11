@@ -1,206 +1,90 @@
 const AbstractRepository = require("../../car/repository/abstractRepository");
-const { fromDbToReserveEntity } = require("../mapper/reserveMapper");
-const { fromDbToCarEntity } = require("../../car/mapper/carMapper");
+const { fromModelToReserveEntity } = require("../mapper/reserveMapper");
+const { fromModelToCarEntity } = require("../../car/mapper/carMapper");
 const ReserveNotFoundError = require("./error/reserveNotFoundError");
 
 module.exports = class ReserveRepository extends AbstractRepository {
-	constructor(mainDataBaseAdapter) {
+	constructor(reserveModel, carModel) {
 		super();
-		this.mainDataBaseAdapter = mainDataBaseAdapter;
+		this.reserveModel = reserveModel;
+		this.carModel = carModel;
 	}
 
 
-	getAll(){
-		const reserves = this.mainDataBaseAdapter.prepare(
-			`SELECT 
-			reserves.id AS reserve_id,
-			reserves.fk_car_id,
-			reserves.since,
-			reserves.until,
-			cars.id AS car_id,
-			cars.brand,
-			cars.model,
-			cars.car_year,
-			cars.transmission,
-			cars.seats,
-			cars.doors,
-			cars.air_conditioning,
-			cars.trunk,
-			cars.fuel,
-			cars.price,
-			cars.unlimited_mileage,
-			cars.car_image,
-			cars.car_description,
-			cars.reserved
-			FROM reserves
-			JOIN cars
-			ON reserves.fk_car_id = cars.id
-			`).all();
-		
-		if(!reserves.length){
+	async getAll(){
+		const reserves = await this.reserveModel.findAll({
+			include: [{
+				model: this.carModel,
+				attributes: {exclude: ["created_at", "updated_at"]}
+			}],
+			attributes: {exclude: ["fk_car_id", "created_at", "updated_at"]}
+		});
+		if(reserves.length === 0){
 			return false;
-		}else{
-			const result = reserves.map((reserve) => {
-				const carData = fromDbToCarEntity({
-					id: reserve.car_id,
-					brand: reserve.brand,
-					model: reserve.model,
-					car_year: reserve.car_year,
-					transmission: reserve.transmission,
-					seats: reserve.seats,
-					doors: reserve.doors,
-					air_conditioning: reserve.air_conditioning,
-					trunk: reserve.trunk,
-					fuel: reserve.fuel,
-					price: reserve.price,
-					unlimited_mileage: reserve.unlimited_mileage,
-					car_image: reserve.car_image,
-					car_description: reserve.car_description,
-					reserved: reserve.reserved
-	
-				});
-	
-				const reserveData = {
-					id: reserve.reserve_id,
-					car: carData,
-					since: reserve.since,
-					until: reserve.until
-				};
-				return fromDbToReserveEntity(reserveData);
-			});
-	
-			
-			return result;
 		}
 
+		return reserves.map((reserve) => {
+			const result = fromModelToReserveEntity(reserve.toJSON());
+			result.car = fromModelToCarEntity(result.car);
+			return result;
+		});
 		
-	
 	}
-	getById(id) {
-		const statement = this.mainDataBaseAdapter.prepare(
-			`SELECT 
-			reserves.id AS reserve_id,
-			reserves.fk_car_id,
-			reserves.since,
-			reserves.until,
-			cars.id AS car_id,
-			cars.brand,
-			cars.model,
-			cars.car_year,
-			cars.transmission,
-			cars.seats,
-			cars.doors,
-			cars.air_conditioning,
-			cars.trunk,
-			cars.fuel,
-			cars.price,
-			cars.unlimited_mileage,
-			cars.car_image,
-			cars.car_description,
-			cars.reserved
-			FROM reserves
-			JOIN cars
-			ON reserves.fk_car_id = cars.id 
-			WHERE reserves.id = ?;`
-		);
+	async getById(id) {
+		const reserve = await this.reserveModel.findByPk(id, {
+			include: [{
+				model: this.carModel,
+				attributes: {exclude: ["created_at", "updated_at"]}
+			}],
+			attributes: {exclude: ["fk_car_id", "created_at", "updated_at"]}
+		});
 
-		const reserve = statement.get(id);
-
-		if (reserve === undefined) {
+		if ( reserve === undefined ) {
 			throw new ReserveNotFoundError("Reserve not found");
 		}
 
-		const carData = fromDbToCarEntity({
-			id: reserve.car_id,
-			brand: reserve.brand,
-			model: reserve.model,
-			car_year: reserve.car_year,
-			transmission: reserve.transmission,
-			seats: reserve.seats,
-			doors: reserve.doors,
-			air_conditioning: reserve.air_conditioning,
-			trunk: reserve.trunk,
-			fuel: reserve.fuel,
-			price: reserve.price,
-			unlimited_mileage: reserve.unlimited_mileage,
-			car_image: reserve.car_image,
-			car_description: reserve.car_description,
-			reserved: reserve.reserved
-		});
+		const result = fromModelToReserveEntity(reserve.toJSON());
+		result.car = fromModelToCarEntity(result.car);
 
-		const reserveData = {
-			id: reserve.reserve_id,
-			car: carData,
+		return result;
+	}
+	async save(reserve) {
+
+		const reserveToSave = {
+			fk_car_id: reserve.car.id,
 			since: reserve.since,
-			until: reserve.until
+			until: reserve.until,
+			price_per_day: reserve.pricePerDay,
+			total_price: reserve.totalPrice,
+			payed: reserve.payed,
+			payment_method: reserve.paymentMethod
+		};
+		
+		const buildOptions = {
+			isNewRecord: !reserve.id,
 		};
 
-		return fromDbToReserveEntity(reserveData);
-	}
-	save(reserve) {
-		let id;
-		const isUpdate = reserve.id;
 		
-		if (isUpdate) {
-			id = reserve.id;
+		let reserveModel = this.reserveModel.build(reserveToSave, buildOptions);
+		reserveModel = await reserveModel.save();
+		
+		const result = await this.getById(reserveModel.id);
 
-			const statement = this.mainDataBaseAdapter.prepare(
-				`UPDATE reserves SET
-				fk_car_id = ?,
-				since = ?,
-				until = ?
-				WHERE id = ?`
-			);
-			const values = [
-				reserve.car.id,
-				reserve.since,
-				reserve.until,
-				id
-			];
-
-			statement.run(values);
-		} else {
-			const transaction = this.mainDataBaseAdapter.prepare("BEGIN TRANSACTION;");
-			transaction.run();
-
-			const reserveStatement = this.mainDataBaseAdapter.prepare("INSERT OR ROLLBACK INTO reserves (fk_car_id, since, until) VALUES (?, ?, ?);");
-			const reserveStatementValues = [reserve.car.id, reserve.since, reserve.until];
-			reserveStatement.run(reserveStatementValues);
-
-			const reserveCar = this.mainDataBaseAdapter.prepare("UPDATE OR ROLLBACK cars SET reserved = 1 WHERE id = ?;");
-			const reserveCarValues = [reserve.car.id];
-			reserveCar.run(reserveCarValues);
-
-			const commitTransaction = this.mainDataBaseAdapter.prepare("COMMIT;");
-			const reserveResult = commitTransaction.run();
-
-			id = reserveResult.lastInsertRowid;
-		}
-
-		return this.getById(id);
+		return result;
+		
 	}
-	delete(id) {
-		const reserve = this.getById(id);
+	async delete(id) {
+		const reserve = await this.getById(id);
 
 		if(reserve === undefined){
 			throw new ReserveNotFoundError("Reserve not found");
 		}
 
-	
-		const transaction = this.mainDataBaseAdapter.prepare("BEGIN TRANSACTION;");
-		transaction.run();
+		await this.reserveModel.destroy({
+			where: { id }
+		});
 
-		const deleteReserveStatement = this.mainDataBaseAdapter.prepare("DELETE FROM reserves WHERE id = ?;");
-		const deleteReserveStatementValues = [id];
-		deleteReserveStatement.run(deleteReserveStatementValues);
-
-		const unreserveCarStatement= this.mainDataBaseAdapter.prepare("UPDATE cars SET reserved = 0 WHERE id = ?;");
-		const unreserveCarStatementValues = [reserve.car.id];
-		unreserveCarStatement.run(unreserveCarStatementValues);
-
-		const commitTransaction = this.mainDataBaseAdapter.prepare("COMMIT;");
-		commitTransaction.run();
-
+				
 		return reserve;
 	}
 
