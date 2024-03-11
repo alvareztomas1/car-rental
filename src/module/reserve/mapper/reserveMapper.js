@@ -1,33 +1,50 @@
 const Reserve = require("../entity/reserve");
 
-function fromDbToReserveEntity({ 
+function fromModelToReserveEntity({ 
 	id,
-	car: car,
 	since,
-	until
+	until,
+	price_per_day: pricePerDay,
+	total_price: totalPrice,
+	payed,
+	payment_method: paymentMethod,
+	Car: car
 }){
 	return new Reserve({
 		id,
 		car,
-		since,
-		until
+		since: since.split(" ")[0],
+		until: until.split(" ")[0],
+		pricePerDay,
+		totalPrice,
+		payed,
+		paymentMethod
 	});
 }
 function fromDataToReserveEntity({
 	id,
 	car,
 	since,
-	until
+	until,
+	pricePerDay,
+	totalPrice,
+	payed,
+	paymentMethod
+
 }){
 	return new Reserve({
 		id,
 		car,
 		since,
-		until
+		until,
+		pricePerDay,
+		totalPrice,
+		payed,
+		paymentMethod
 	});
 }
 
 module.exports = {
-	fromDbToReserveEntity,
+	fromModelToReserveEntity,
 	fromDataToReserveEntity
 };
