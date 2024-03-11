@@ -1,17 +1,10 @@
 const { CarController, CarService, CarRepository, CarModel } = require("../module/car/module");
-const { ReserveController, ReserveService, ReserveRepository } = require("../module/reserve/module");
+const { ReserveController, ReserveService, ReserveRepository, ReserveModel } = require("../module/reserve/module");
 const { default: DIContainer, object, get, factory } = require("rsdi");
 const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
-const Sqlite3Database = require("better-sqlite3");
 const { Sequelize } = require("sequelize");
-
-function configureMainDatabaseAdapter(){
-	return new Sqlite3Database(process.env.DB_path,{
-		verbose: console.log
-	});
-}
 
 function configureMainSequelizeAdapter(){
 	const sequelize = new Sequelize({
@@ -52,9 +45,15 @@ function configureCarModel(container){
 	return CarModel;
 }
 
+function configureReserveModel(container){
+	ReserveModel.setup(container.get("Sequelize"));
+	ReserveModel.setUpAssociations(container.get("CarModel"));
+
+	return ReserveModel;
+}
+
 function addCommonDefinitions(container){
 	container.addDefinitions({
-		MainDatabaseAdapter: factory(configureMainDatabaseAdapter),
 		Multer: factory(configureMulter),
 		Session: factory(configureSession),
 		Sequelize: factory(configureMainSequelizeAdapter),
@@ -73,7 +72,8 @@ function addReserveModuleDefinitions(container){
 	container.addDefinitions({
 		ReserveController: object(ReserveController).construct(get("CarService"), get("ReserveService")),
 		ReserveService: object(ReserveService).construct(get("ReserveRepository"), get("CarService")),
-		ReserveRepository: object(ReserveRepository).construct(get("MainDatabaseAdapter")),
+		ReserveRepository: object(ReserveRepository).construct(get("ReserveModel"), get("CarModel")),
+		ReserveModel: factory(configureReserveModel),
 	});
 }
 
