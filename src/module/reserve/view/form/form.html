@@ -14,7 +14,7 @@
                 {% include "reserve/view/form/car/features.html" %}
             </div>
 
-            <form method="POST" action="/reserve/{{data.car.id}}">
+            <form method="POST" action="/reserve/{{car.id}}">
                 {% include "reserve/view/form/content.html" %}
                 {% include "reserve/view/form/actions.html" %}
             </form>

@@ -2,27 +2,69 @@
     <div class="column">
         <div class="field">
             <label class="label">Select a start date</label>
-            <div class="control">
-                <input value="{{ reserve.since }}" name="since" id="date-start" class="input" type="text" placeholder="Since" required>
+            <div class="control has-icons-right">
+                <input value="{{ reserve.since }}" name="since" id="date-start"
+                    class="input {% if validation %} {% if validation.since %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                    type="text" placeholder="Since" value="{{ reserve.since }}" required>
+                    <span class="icon is-small is-right">
+                        {% if validation %}
+                        {% if validation.since %}
+                        <i class="fas fa-check"></i>
+                        {% else %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% endif %}
+                        {% endif %}
+                    </span>
             </div>
             {% if validation.since === false %}
-                <p class="help is-danger">Invalid date</p>
+            <p class="help is-danger">Invalid date</p>
             {% endif %}
         </div>
     </div>
     <div class="column">
         <div class="field">
             <label class="label">Select an end date</label>
-            <div class="control">
-                <input value="{{ reserve.until }}" name="until" id="date-end" class="input" type="text" placeholder="Until" required>
+            <div class="control has-icons-right">
+                <input value="{{ reserve.until }}" name="until" id="date-end"
+                    class="input {% if validation %} {% if validation.since %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                    type="text" placeholder="Until"  value="{{ reserve.until }}" required>
+                    <span class="icon is-small is-right">
+                        {% if validation %}
+                        {% if validation.until %}
+                        <i class="fas fa-check"></i>
+                        {% else %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% endif %}
+                        {% endif %}
+                    </span>
             </div>
             {% if validation.until === false %}
-                <p class="help is-danger">Invalid date</p>
+            <p class="help is-danger">Invalid date</p>
             {% endif %}
+        </div>
+    </div>
+    <div class="column">
+        <div class="field">
+            <label class="label">Select a payment method</label>
+            <div class="control">
+                <div class="select">
+                    <select name="payment-method" id="payment-method">
+                        <option {% if reserve.paymentMethod==="Cash" %} selected {% endif %} value="Cash">Cash</option>
+                        <option {% if reserve.paymentMethod==="Paypal" %} selected {% endif %} value="Paypal">Paypal</option>
+                        <option {% if reserve.paymentMethod==="Credit card" %} selected {% endif %} value="Credit card">Credit card</option>
+                        <option {% if reserve.paymentMethod==="Debit card" %} selected {% endif %} value="Debit card">Debit card</option>
+                    </select>
+                </div>
+                <p
+                    class="help {% if validation %} {% if not validation.paymentMethod %}  is-danger {% endif %} {% endif %}">
+                    {% if validation.paymentMethod === false %}
+                    Invalid fuel option. You must select a valid one.
+                    {% endif %}
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
 <input class="is-hidden" type="hidden" name="id" value="{{ reserve.id }}">
-<input class="is-hidden" type="hidden" name="car-id" value="{{ data.car.id }}">
-
+<input class="is-hidden" type="hidden" name="car-id" value="{{ car.id }}">
