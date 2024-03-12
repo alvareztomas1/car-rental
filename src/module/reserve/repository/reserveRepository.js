@@ -51,6 +51,7 @@ module.exports = class ReserveRepository extends AbstractRepository {
 	async save(reserve) {
 
 		const reserveToSave = {
+			id: reserve.id ? reserve.id : null,
 			fk_car_id: reserve.car.id,
 			since: reserve.since,
 			until: reserve.until,

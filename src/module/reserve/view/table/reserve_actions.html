@@ -1,5 +1,5 @@
 <td><a class="button is-link is-small is-light" href="/car/view/{{reserve.car.id}}">Car info</a></td>
-<td><a class="button is-info is-small is-light" href="/reserve/edit/{{reserve.id}}">Edit</a></td>
+<td><a class="button is-info is-small is-light" {% if not reserve.payed %} href="/reserve/edit/{{reserve.id}} {% else %} disabled {% endif %}">Edit</a></td>
 <td>
     <button class="js-modal-trigger button is-danger is-small is-light"
         data-target="reserve-{{reserve.id}}-delete-modal">
