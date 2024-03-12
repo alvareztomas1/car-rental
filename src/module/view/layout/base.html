@@ -137,11 +137,11 @@
   flatpickr("#date-start", {
     dateFormat: "Y-m-d",
     minDate: "today", 
-    maxDate: maxDate, 
+    maxDate: maxDate,
     onClose: function (selectedDates) {
       flatpickr("#date-end", {
-        minDate: selectedDates[0],
-        maxDate: maxDate 
+        minDate: selectedDates[0] || "today",
+        maxDate: maxDate,
       });
     }
   });
