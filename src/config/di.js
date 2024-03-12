@@ -1,5 +1,6 @@
 const { CarController, CarService, CarRepository, CarModel } = require("../module/car/module");
 const { ReserveController, ReserveService, ReserveRepository, ReserveModel } = require("../module/reserve/module");
+const { UserController, UserService, UserRepository, UserModel } = require("../module/user/module");
 const { default: DIContainer, object, get, factory } = require("rsdi");
 const session = require("express-session");
 const multer = require("multer");
@@ -52,6 +53,12 @@ function configureReserveModel(container){
 	return ReserveModel;
 }
 
+function configureUserModel(container){
+	UserModel.setup(container.get("Sequelize"));
+
+	return UserModel;
+}
+
 function addCommonDefinitions(container){
 	container.addDefinitions({
 		Multer: factory(configureMulter),
@@ -77,11 +84,21 @@ function addReserveModuleDefinitions(container){
 	});
 }
 
+function addUserModuleDefinitions(container){
+	container.addDefinitions({
+		UserController: object(UserController).construct(get("UserService")),
+		UserService: object(UserService).construct(get("UserRepository")),
+		UserRepository: object(UserRepository).construct(get("UserModel")),
+		UserModel: factory(configureUserModel),
+	});
+}
+
 module.exports = function configureDI(){
 	const container = new DIContainer();
 	addCommonDefinitions(container);
 	addCarModuleDefinitions(container);
 	addReserveModuleDefinitions(container);
+	addUserModuleDefinitions(container);
 
 	return container;
 };

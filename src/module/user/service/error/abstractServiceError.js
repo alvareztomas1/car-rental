@@ -1,0 +1,1 @@
+module.exports = class AbstractServiceError extends Error{};
