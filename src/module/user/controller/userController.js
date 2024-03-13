@@ -1,5 +1,6 @@
 const AbstractController = require("./error/abstractControllerError");
 const { fromDataToUserEntity } = require("../mapper/userMapper");
+const UserIdNotDefinedError = require("./error/userIdNotDefinedError");
 
 module.exports = class UserController extends AbstractController{
 	constructor(userService){
@@ -13,8 +14,8 @@ module.exports = class UserController extends AbstractController{
 		app.get(`${ROUTE}/list`, this.index.bind(this));  
 		app.get(`${ROUTE}/create`, this.create.bind(this));
 		app.post(`${ROUTE}/create`, this.save.bind(this));
-		app.post(`${ROUTE}/delete/:id`, this.delete.bind(this));      
-      
+		app.post(`${ROUTE}/delete/:id`, this.delete.bind(this)); 
+		app.get(`${ROUTE}/edit/:id`, this.edit.bind(this));     
 	}
 
 	async index(req, res){
@@ -38,9 +39,13 @@ module.exports = class UserController extends AbstractController{
 
 			// TODO: Add validation
 
-			req.session.messages = [`User #${savedUser.id} added succesfully`];
+			if(formData.id){
+				req.session.messages = [`User #${savedUser.id} edited succesfully`];
+			}else{
+				req.session.messages = [`User #${savedUser.id} added succesfully`];
+			}
 			res.redirect("/");
-
+			
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
@@ -56,6 +61,22 @@ module.exports = class UserController extends AbstractController{
 
 			res.redirect("/");
 
+		}catch(e){
+			req.session.errors = [e.message, e.stack];
+			res.redirect("/");
+		}
+	}
+
+	async edit(req, res){
+		const id = req.params.id;
+
+		if(id === undefined){
+			throw new UserIdNotDefinedError("User id not defined");
+		}
+		// TODO: Add validation
+		try{
+			const user = await this.userService.getById(id);
+			res.render("user/view/form/form.html", { data: { user }, pageTitle: `Edit ${user.names} ${user.surnames}` });
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
