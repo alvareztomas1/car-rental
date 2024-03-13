@@ -1,0 +1,17 @@
+<tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.names }}</td>
+    <td>{{ user.surnames }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.phone }}</td>
+    <td>{{ user.birthdate }}</td>
+    <td>{{ user.nationality }}</td>
+    <td>{{ user.address }}</td>
+    <td><a class="button is-info is-small is-light"  href="/user/edit/{{user.id}} ">Edit</a></td>
+    <td>
+        <button class="js-modal-trigger button is-danger is-small is-light"
+            data-target="user-{{user.id}}-delete-modal">
+            Delete
+        </button>
+    </td>
+</tr>
