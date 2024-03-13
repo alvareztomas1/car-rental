@@ -12,7 +12,9 @@ module.exports = class UserController extends AbstractController{
 		const ROUTE = this.ROUTE_BASE;
 		app.get(`${ROUTE}/list`, this.index.bind(this));  
 		app.get(`${ROUTE}/create`, this.create.bind(this));
-		app.post(`${ROUTE}/create`, this.save.bind(this));      
+		app.post(`${ROUTE}/create`, this.save.bind(this));
+		app.post(`${ROUTE}/delete/:id`, this.delete.bind(this));      
+      
 	}
 
 	async index(req, res){
@@ -37,6 +39,21 @@ module.exports = class UserController extends AbstractController{
 			// TODO: Add validation
 
 			req.session.messages = [`User #${savedUser.id} added succesfully`];
+			res.redirect("/");
+
+		}catch(e){
+			req.session.errors = [e.message, e.stack];
+			res.redirect("/");
+		}
+	}
+
+	async delete(req, res){
+		try{
+			const userId = req.params.id;
+			const deletedUser = await this.userService.delete(userId);
+
+			req.session.messages = [`User #${deletedUser.id} ${deletedUser.names} ${deletedUser.surnames} deleted succesfully`];
+
 			res.redirect("/");
 
 		}catch(e){

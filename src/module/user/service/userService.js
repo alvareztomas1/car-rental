@@ -1,5 +1,7 @@
 const AbstractService = require("./abstractService");
 const UserNotDefinedError = require("./error/userNotDefinedError");
+const UserIdNotDefinedError = require("./error/userIdNotDefinedError");
+
 
 module.exports = class UserService extends AbstractService {
 	constructor(userRespotiroy) {
@@ -18,5 +20,14 @@ module.exports = class UserService extends AbstractService {
 		}
 
 		return this.userRespotiroy.save(user);
+	}
+
+	delete(id) {
+
+		if (id === undefined) {
+			throw new UserIdNotDefinedError("User id is not defined");
+		}
+
+		return this.userRespotiroy.delete(id);
 	}
 };
