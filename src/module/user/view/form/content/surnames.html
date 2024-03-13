@@ -1,0 +1,25 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Surnames</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.user.surnames }}" name="surnames" id="surnames"
+                class="input {% if validation %} {% if validation.surnames %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="text" placeholder="User surnames" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.surnames %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p class="help {% if validation %} {% if not validation.surnames %} is-danger {% endif %} {% endif %}">
+            {% if validation.surnames === false %}
+            XXXXXXXXXXXXXX
+            {% endif %}
+        </p>
+    </div>
+
+</div>

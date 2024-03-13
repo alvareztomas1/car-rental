@@ -1,0 +1,25 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Address</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.address }}" name="address" id="address"
+                class="input {% if validation %} {% if validation.address %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="text" placeholder="Address" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.address %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p class="help {% if validation %} {% if not validation.address %} is-danger {% endif %} {% endif %}">
+            {% if validation.address === false %}
+            XXXXXXXXXXXXXX
+            {% endif %}
+        </p>
+    </div>
+
+</div>

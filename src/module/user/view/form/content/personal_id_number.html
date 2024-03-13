@@ -1,0 +1,25 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Personal ID number</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.user.personalIdNumber }}" name="personal-id-number" id="personal-id-number"
+                class="input {% if validation %} {% if validation.personalIdNumber %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="string" placeholder="User personal ID number" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.personalIdNumber %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.personalIdNumber %} is-danger {% endif %} {% endif %}">
+            {% if validation.personalIdNumber === false %}
+            XXXXXXXXXXXXXX
+            {% endif %}
+        </p>
+    </div>
+</div>

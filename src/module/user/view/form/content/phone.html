@@ -1,0 +1,26 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Phone</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.phone }}" name="phone" id="phone"
+                class="input {% if validation %} {% if validation.phone %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="text" placeholder="Phone" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.phone %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p class="help {% if validation %} {% if not validation.phone %} is-danger {% endif %} {% endif %}">
+            {% if validation.phone === false %}
+            XXXXXXXXXXXXXX
+            {% endif %}
+        </p>
+    </div>
+
+
+</div>

@@ -1,0 +1,24 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Birth date</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.birthDate }}" name="birthdate" id="birthdate"
+                class="input {% if validation %} {% if validation.since %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="text" placeholder="User birthdate" value="{{ data.birthDate }}" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.personalIdNumber %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p class="help {% if validation %} {% if not validation.birthDate %} is-danger {% endif %} {% endif %}">
+            {% if validation.birthDate === false %}
+            XXXXXXXXXXXXXX
+            {% endif %}
+        </p>
+    </div>
+</div>

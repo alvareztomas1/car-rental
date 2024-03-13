@@ -1,0 +1,25 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.user.email }}" name="email" id="email"
+                class="input {% if validation %} {% if validation.email %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="email" placeholder="user@email.com" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.email %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p class="help {% if validation %} {% if not validation.email %} is-danger {% endif %} {% endif %}">
+            {% if validation.email === false %}
+            XXXXXXXXXXXXXX
+            {% endif %}
+        </p>
+    </div>
+
+</div>

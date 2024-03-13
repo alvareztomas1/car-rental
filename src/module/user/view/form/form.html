@@ -1,0 +1,19 @@
+{% extends "view/layout/base.html" %}
+
+{% block body %}
+<br>
+
+    
+<div class="columns is-centered">
+    <div class="column is-three-fifths">
+        <div class="box">
+            <form method="POST" action="/user/create">
+                {% include "user/view/form/title.html" %}
+                {% include "user/view/form/content.html" %}
+                {% include "user/view/form/actions.html" %}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
