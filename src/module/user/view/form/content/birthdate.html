@@ -2,9 +2,9 @@
     <div class="field">
         <label class="label">Birthdate</label>
         <div class="control has-icons-right">
-            <input value="{{ data.birthDate }}" name="birthdate" id="birthdate"
+            <input value="{{ data.user.birthdate }}" name="birthdate" id="birthdate"
                 class="input {% if validation %} {% if validation.since %} is-success {% else %} is-danger {% endif %} {% endif %}"
-                type="text" placeholder="User birthdate" value="{{ data.birthDate }}" required>
+                type="text" placeholder="User birthdate" required>
             <span class="icon is-small is-right">
                 {% if validation %}
                 {% if validation.personalIdNumber %}
@@ -15,8 +15,8 @@
                 {% endif %}
             </span>
         </div>
-        <p class="help {% if validation %} {% if not validation.birthDate %} is-danger {% endif %} {% endif %}">
-            {% if validation.birthDate === false %}
+        <p class="help {% if validation %} {% if not validation.birthdate %} is-danger {% endif %} {% endif %}">
+            {% if validation.birthdate === false %}
             XXXXXXXXXXXXXX
             {% endif %}
         </p>

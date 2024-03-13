@@ -4,14 +4,14 @@
         <div class="control has-icons-right">
             <div class="select">
                 <select name="personal-id-type" id="personal-id-type">
-                    <option value="Passport" {% if data.personalIdType==="Passport" %} selected {% endif %}>Passport
+                    <option value="Passport" {% if data.user.personalIdType==="Passport" %} selected {% endif %}>Passport
                     </option>
-                    <option value="SSN" {% if data.personalIdType==="SSN" %} selected {% endif %}>SSN
+                    <option value="SSN" {% if data.user.personalIdType==="SSN" %} selected {% endif %}>SSN
                     </option>
-                    <option value="Driver's license" {% if data.personalIdType==="Driver's license" %} selected {%
+                    <option value="Driver's license" {% if data.user.personalIdType==="Driver's license" %} selected {%
                         endif %}>
                         Driver's license</option>
-                    <option value="National ID Card" {% if data.personalIdType==="National ID Card" %} selected {%
+                    <option value="National ID Card" {% if data.user.personalIdType==="National ID Card" %} selected {%
                         endif %}>
                         National ID Card</option>
                 </select>
