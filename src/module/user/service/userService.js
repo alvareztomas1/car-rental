@@ -13,6 +13,13 @@ module.exports = class UserService extends AbstractService {
 		return this.userRespotiroy.getAll();
 	}
 
+	getById(id){
+		if(id === undefined){
+			throw new UserIdNotDefinedError("User id not defined");
+		}
+		return this.userRespotiroy.getById(id);
+	}
+
 	save(user) {
 		
 		if (user === undefined) {
