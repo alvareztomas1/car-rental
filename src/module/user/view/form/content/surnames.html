@@ -17,7 +17,7 @@
         </div>
         <p class="help {% if validation %} {% if not validation.surnames %} is-danger {% endif %} {% endif %}">
             {% if validation.surnames === false %}
-            XXXXXXXXXXXXXX
+                Invalid input. Surnames must be between 3 and 100 characters.
             {% endif %}
         </p>
     </div>

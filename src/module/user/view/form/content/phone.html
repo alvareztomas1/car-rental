@@ -4,7 +4,7 @@
         <div class="control has-icons-right">
             <input value="{{ data.user.phone }}" name="phone" id="phone"
                 class="input {% if validation %} {% if validation.phone %} is-success {% else %} is-danger {% endif %} {% endif %}"
-                type="text" placeholder="Phone" required>
+                type="text" placeholder="(+12) 3456-7890" required>
             <span class="icon is-small is-right">
                 {% if validation %}
                 {% if validation.phone %}
@@ -17,7 +17,7 @@
         </div>
         <p class="help {% if validation %} {% if not validation.phone %} is-danger {% endif %} {% endif %}">
             {% if validation.phone === false %}
-            XXXXXXXXXXXXXX
+                Invalid phone.
             {% endif %}
         </p>
     </div>

@@ -14,6 +14,9 @@
                     <option value="National ID Card" {% if data.user.personalIdType==="National ID Card" %} selected {%
                         endif %}>
                         National ID Card</option>
+                        <option value="Other" {% if data.user.personalIdType==="Other" %} selected {%
+                            endif %}>
+                            Other</option>
                 </select>
             </div>
 
@@ -30,7 +33,7 @@
         <p
             class="help {% if validation %} {% if not validation.personalIdType %} is-danger {% endif %} {% endif %}">
             {% if validation.personalIdType === false %}
-            XXXXXXXXXXXXXX
+                Invalid personal ID type. Pick one from the list.
             {% endif %}
         </p>
     </div>
