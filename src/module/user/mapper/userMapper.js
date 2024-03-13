@@ -47,7 +47,7 @@ function fromModelToUserEntity({
 		nationality,
 		email,
 		phone,
-		birthdate,
+		birthdate: birthdate.toISOString().split("T")[0],
 		address
 	});
 }

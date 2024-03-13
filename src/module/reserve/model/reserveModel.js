@@ -53,6 +53,7 @@ module.exports = class ReserveModel extends AbstractModel {
 				timestamps: false
 			}
 		);
+		ReserveModel.sync({ force: false });
 	}
 	static setUpAssociations(CarModel) {
 		ReserveModel.belongsTo(CarModel, { foreignKey: "fk_car_id" });

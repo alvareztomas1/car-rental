@@ -13,8 +13,8 @@ function fromModelToReserveEntity({
 	return new Reserve({
 		id,
 		car,
-		since: since.split(" ")[0],
-		until: until.split(" ")[0],
+		since: since.toISOString().split("T")[0],
+		until: until.toISOString().split("T")[0],
 		pricePerDay,
 		totalPrice,
 		payed,
