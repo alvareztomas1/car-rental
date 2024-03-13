@@ -2,6 +2,7 @@ const AbstractRepository = require("../../car/repository/abstractRepository");
 const { fromModelToReserveEntity } = require("../mapper/reserveMapper");
 const { fromModelToCarEntity } = require("../../car/mapper/carMapper");
 const ReserveNotFoundError = require("./error/reserveNotFoundError");
+const CouldNotDeleteReserve = require("./error/couldNotDeleteReserve");
 
 module.exports = class ReserveRepository extends AbstractRepository {
 	constructor(reserveModel, carModel) {
@@ -77,15 +78,14 @@ module.exports = class ReserveRepository extends AbstractRepository {
 	async delete(id) {
 		const reserve = await this.getById(id);
 
-		if(reserve === undefined){
-			throw new ReserveNotFoundError("Reserve not found");
-		}
-
-		await this.reserveModel.destroy({
+		const deleteReserve = await this.reserveModel.destroy({
 			where: { id }
 		});
 
-				
+		if(!deleteReserve) {
+			throw new CouldNotDeleteReserve("Could not delete reserve");
+		}
+		
 		return reserve;
 	}
 

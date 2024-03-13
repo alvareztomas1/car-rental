@@ -2,6 +2,7 @@ const AbstractRepository = require("./abstractRepository");
 const { fromModelToCarEntity } = require("../mapper/carMapper");
 const CarNotFoundError = require("./error/carNotFoundError");
 const CarIsReservedError = require("./error/carIsReservedError");
+const CouldNotDeleteCarError = require("./error/couldNotDeleteCarError");
 
 module.exports = class CarRepository extends AbstractRepository {
 	constructor(carModel, reserveModel) {
@@ -66,8 +67,8 @@ module.exports = class CarRepository extends AbstractRepository {
 
 		const deletedTeam = await this.carModel.destroy({ where: { id } });
 
-		if(deletedTeam === undefined){
-			throw new CarNotFoundError("Car with received id not found");
+		if(!deletedTeam){
+			throw new CouldNotDeleteCarError("Could not delete car");
 		}
 
 		return teamBackup;
