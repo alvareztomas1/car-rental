@@ -18,7 +18,7 @@ module.exports = class UserController extends AbstractController{
 	async index(req, res){
 		try{
 			const users = await this.userService.getAll();
-			res.render("user/view/index.html", { data: { users }, pageTitle: "Users list" });
+			res.render("user/view/index.html", { users: users ? users : false, pageTitle: "Users list" });
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
@@ -36,9 +36,9 @@ module.exports = class UserController extends AbstractController{
 
 			// TODO: Add validation
 
-			req.session.messages = [`Use #${savedUser.id} added succesfully`];
+			req.session.messages = [`User #${savedUser.id} added succesfully`];
 			res.redirect("/");
-			
+
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
