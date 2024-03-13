@@ -35,17 +35,22 @@ module.exports = class UserController extends AbstractController{
 	async save(req, res){
 		const formData = fromDataToUserEntity(req.body);
 		try{
-			const savedUser = await this.userService.save(formData);
+			const validation = this.userService.validate(formData);
+			const validationIsSuccess = !Object.values(validation).includes(false);
 
-			// TODO: Add validation
+			if(validationIsSuccess){
+				const savedUser = await this.userService.save(formData);
 
-			if(formData.id){
-				req.session.messages = [`User #${savedUser.id} edited succesfully`];
+				if(formData.id){
+					req.session.messages = [`User #${savedUser.id} edited succesfully`];
+				}else{
+					req.session.messages = [`User #${savedUser.id} added succesfully`];
+				}
+				res.redirect("/");
 			}else{
-				req.session.messages = [`User #${savedUser.id} added succesfully`];
+				res.render("user/view/form/form.html", { data: { user: formData }, validation, pageTitle: formData.id ? "Edit user" : "Add new user" });
 			}
-			res.redirect("/");
-			
+
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
@@ -73,7 +78,6 @@ module.exports = class UserController extends AbstractController{
 		if(id === undefined){
 			throw new UserIdNotDefinedError("User id not defined");
 		}
-		// TODO: Add validation
 		try{
 			const user = await this.userService.getById(id);
 			res.render("user/view/form/form.html", { data: { user }, pageTitle: `Edit ${user.names} ${user.surnames}` });
