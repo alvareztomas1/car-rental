@@ -1,4 +1,4 @@
-const AbstractService = require("../../car/service/abstractService");
+const AbstractService = require("../../abstractService");
 const ReserveNotDefinedError = require("./error/reserveNotDefinedError");
 
 module.exports = class ReserveService extends AbstractService {

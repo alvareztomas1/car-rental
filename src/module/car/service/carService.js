@@ -1,4 +1,4 @@
-const AbstractService = require("./abstractService");
+const AbstractService = require("../../abstractService");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 const CarNotDefinedError = require("./error/carNotDefinedError");
 

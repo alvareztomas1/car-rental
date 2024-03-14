@@ -1,4 +1,4 @@
-const AbstractRepository = require("./abstractRepository");
+const AbstractRepository = require("../../abstractRepository");
 const { fromModelToUserEntity } = require("../mapper/userMapper");
 const UserNotFoundError = require("./error/userNotFoundError");
 const CouldNotDeleteUser = require("./error/couldNotDeleteUser");

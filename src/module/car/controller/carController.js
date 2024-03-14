@@ -1,4 +1,4 @@
-const AbstractController = require("./abstractController");
+const AbstractController = require("../../abstractController");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 const { fromDataToCarEntity } = require("../mapper/carMapper");
 

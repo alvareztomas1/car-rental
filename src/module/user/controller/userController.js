@@ -1,4 +1,4 @@
-const AbstractController = require("./error/abstractControllerError");
+const AbstractController = require("../../abstractController");
 const { fromDataToUserEntity } = require("../mapper/userMapper");
 const UserIdNotDefinedError = require("./error/userIdNotDefinedError");
 

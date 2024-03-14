@@ -58,7 +58,7 @@ module.exports = class UserModel extends AbstractModel{
 			},
 			{
 				sequelize: sequelizeInstance,
-				modelName: "user",
+				modelName: "User",
 				timestamps: false
 			}
 		);

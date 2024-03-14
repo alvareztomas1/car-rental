@@ -1,4 +1,4 @@
-const AbstractController = require("../../car/controller/abstractController");
+const AbstractController = require("../../abstractController");
 const { fromDataToReserveEntity } = require("../mapper/reserveMapper");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 const ReserveIdNotDefinedError = require("./error/reserveIdNotDefinedError");

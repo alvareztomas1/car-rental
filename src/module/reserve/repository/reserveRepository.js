@@ -1,4 +1,4 @@
-const AbstractRepository = require("../../car/repository/abstractRepository");
+const AbstractRepository = require("../../abstractRepository");
 const { fromModelToReserveEntity } = require("../mapper/reserveMapper");
 const { fromModelToCarEntity } = require("../../car/mapper/carMapper");
 const { fromModelToUserEntity } = require("../../user/mapper/userMapper");

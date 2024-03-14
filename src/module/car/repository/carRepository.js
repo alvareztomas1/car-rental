@@ -1,4 +1,4 @@
-const AbstractRepository = require("./abstractRepository");
+const AbstractRepository = require("../../abstractRepository");
 const { fromModelToCarEntity } = require("../mapper/carMapper");
 const CarNotFoundError = require("./error/carNotFoundError");
 const CarIsReservedError = require("./error/carIsReservedError");
