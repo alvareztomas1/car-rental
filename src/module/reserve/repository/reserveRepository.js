@@ -1,25 +1,32 @@
 const AbstractRepository = require("../../car/repository/abstractRepository");
 const { fromModelToReserveEntity } = require("../mapper/reserveMapper");
 const { fromModelToCarEntity } = require("../../car/mapper/carMapper");
+const { fromModelToUserEntity } = require("../../user/mapper/userMapper");
 const ReserveNotFoundError = require("./error/reserveNotFoundError");
 const CouldNotDeleteReserve = require("./error/couldNotDeleteReserve");
 
 module.exports = class ReserveRepository extends AbstractRepository {
-	constructor(reserveModel, carModel) {
+	constructor(reserveModel, carModel, userModel) {
 		super();
 		this.reserveModel = reserveModel;
 		this.carModel = carModel;
+		this.userModel = userModel;
 	}
 
 
 	async getAll(){
 		const reserves = await this.reserveModel.findAll({
-			include: [{
-				model: this.carModel,
-				attributes: {exclude: ["created_at", "updated_at"]}
-			}],
-			attributes: {exclude: ["fk_car_id", "created_at", "updated_at"]}
+			include: [
+				{
+					model: this.carModel,
+					attributes: {exclude: ["created_at", "updated_at"]}
+				}, {
+					model: this.userModel,
+					attributes: {exclude: ["created_at", "updated_at"]}
+				}],
+			attributes: {exclude: ["fk_car_id", "fk_user_id", "created_at", "updated_at"]}
 		});
+		
 		if(reserves.length === 0){
 			return false;
 		}
@@ -27,25 +34,30 @@ module.exports = class ReserveRepository extends AbstractRepository {
 		return reserves.map((reserve) => {
 			const result = fromModelToReserveEntity(reserve.toJSON());
 			result.car = fromModelToCarEntity(result.car);
+			result.user = fromModelToUserEntity(result.user);
 			return result;
 		});
 		
 	}
 	async getById(id) {
 		const reserve = await this.reserveModel.findByPk(id, {
-			include: [{
-				model: this.carModel,
-				attributes: {exclude: ["created_at", "updated_at"]}
-			}],
-			attributes: {exclude: ["fk_car_id", "created_at", "updated_at"]}
+			include: [
+				{
+					model: this.carModel,
+					attributes: {exclude: ["created_at", "updated_at"]}
+				}, {
+					model: this.userModel,
+					attributes: {exclude: ["created_at", "updated_at"]}
+				}],
+			attributes: {exclude: ["fk_car_id", "fk_user_id", "created_at", "updated_at"]}
 		});
-
 		if ( reserve === undefined ) {
 			throw new ReserveNotFoundError("Reserve not found");
 		}
 
 		const result = fromModelToReserveEntity(reserve.toJSON());
 		result.car = fromModelToCarEntity(result.car);
+		result.user = fromModelToUserEntity(result.user);
 
 		return result;
 	}
@@ -54,6 +66,7 @@ module.exports = class ReserveRepository extends AbstractRepository {
 		const reserveToSave = {
 			id: reserve.id ? reserve.id : null,
 			fk_car_id: reserve.car.id,
+			fk_user_id: reserve.user.id,
 			since: reserve.since,
 			until: reserve.until,
 			price_per_day: reserve.pricePerDay,
