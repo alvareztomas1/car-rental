@@ -48,23 +48,27 @@ module.exports = class ReserveController extends AbstractController {
 	}
 	
 	async save(req, res) {
+		const { since, until, id } = req.body;
+		const carId = req.body["car-id"];
+		const userId = req.body["user-id"];
+
+		const dataToValidate = {
+			id,
+			carId,
+			userId,
+			since,
+			until,
+			paymentMethod: req.body["payment-method"]
+		};
+
 		try {
-			const { since, until, id } = req.body;
-			const carId = req.body["car-id"];
-
-			const dataToValidate = {
-				id,
-				carId,
-				since,
-				until,
-				paymentMethod: req.body["payment-method"]
-			};
-			
 			const car = await this.carService.getById(carId);
+			const user = await this.userService.getById(userId);
 
-			const reserveData = {
+			const reserveToSave = {
 				id, 
-				car, 
+				car,
+				user, 
 				since, 
 				until,
 				pricePerDay: car.price,
@@ -73,13 +77,13 @@ module.exports = class ReserveController extends AbstractController {
 				paymentMethod: dataToValidate.paymentMethod 
 			};
 
-			const reserve = fromDataToReserveEntity(reserveData);
+			const reserve = fromDataToReserveEntity(reserveToSave);
 			const validation = this.reserveService.validate(dataToValidate);
 			const validationIsSuccess = !Object.values(validation).includes(false);
 
 			if (validationIsSuccess) {
 				const savedReserve = await this.reserveService.save(reserve);
-
+				
 				if(id){
 					req.session.messages = [`Reserve #${savedReserve.id} of ${savedReserve.car.brand} ${savedReserve.car.model} ${savedReserve.car.year} edited succesfully`];
 				}else{
@@ -88,8 +92,10 @@ module.exports = class ReserveController extends AbstractController {
 
 				res.redirect("/");
 			}else{
-				res.render("reserve/view/form/form.html", { car, reserve, validation, pageTitle: "Reserve a car" });
+				const users = await this.userService.getAll();
+				res.render("reserve/view/form/form.html", { car, users, reserve, validation, pageTitle: "Reserve a car" });
 			}
+
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
