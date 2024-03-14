@@ -15,6 +15,10 @@ module.exports = class ReserveModel extends AbstractModel {
 					type: DataTypes.INTEGER,
 					allowNull: false
 				},
+				fk_user_id: {
+					type: DataTypes.INTEGER,
+					allowNull: false
+				},
 				since: {
 					type: DataTypes.DATE,
 					allowNull: false
@@ -55,7 +59,8 @@ module.exports = class ReserveModel extends AbstractModel {
 		);
 		ReserveModel.sync({ force: false });
 	}
-	static setUpAssociations(CarModel) {
+	static setUpAssociations(CarModel, UserModel) {
 		ReserveModel.belongsTo(CarModel, { foreignKey: "fk_car_id" });
+		ReserveModel.belongsTo(UserModel, { foreignKey: "fk_user_id" });
 	}
 };

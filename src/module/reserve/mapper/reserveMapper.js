@@ -8,11 +8,13 @@ function fromModelToReserveEntity({
 	total_price: totalPrice,
 	payed,
 	payment_method: paymentMethod,
-	Car: car
+	Car: car,
+	User: user
 }){
 	return new Reserve({
 		id,
 		car,
+		user,
 		since: since.toISOString().split("T")[0],
 		until: until.toISOString().split("T")[0],
 		pricePerDay,
@@ -24,6 +26,7 @@ function fromModelToReserveEntity({
 function fromDataToReserveEntity({
 	id,
 	car,
+	user,
 	since,
 	until,
 	pricePerDay,
@@ -35,6 +38,7 @@ function fromDataToReserveEntity({
 	return new Reserve({
 		id,
 		car,
+		user,
 		since,
 		until,
 		pricePerDay,

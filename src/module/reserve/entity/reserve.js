@@ -1,7 +1,8 @@
 module.exports = class Reserve{
 	constructor({
 		id,
-		car, 
+		car,
+		user, 
 		since, 
 		until,
 		pricePerDay,
@@ -11,6 +12,7 @@ module.exports = class Reserve{
 	}){
 		this.id = id;
 		this.car = car;
+		this.user = user;
 		this.since = since;
 		this.until = until;
 		this.pricePerDay = pricePerDay;

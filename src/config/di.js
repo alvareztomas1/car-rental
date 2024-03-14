@@ -50,6 +50,7 @@ function configureReserveModel(container){
 	ReserveModel.setup(container.get("Sequelize"));
 	ReserveModel.setUpAssociations(container.get("CarModel"));
 
+	ReserveModel.setUpAssociations(container.get("CarModel"),  container.get("UserModel"));
 	return ReserveModel;
 }
 
