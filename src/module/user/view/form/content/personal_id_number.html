@@ -18,7 +18,7 @@
         <p
             class="help {% if validation %} {% if not validation.personalIdNumber %} is-danger {% endif %} {% endif %}">
             {% if validation.personalIdNumber === false %}
-                Invalid personal ID number.
+                Invalid personal ID number. No special characters allowed
             {% endif %}
         </p>
     </div>

@@ -262,7 +262,7 @@ module.exports = class UserService extends AbstractService {
 		case "email":
 			return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input);
 		case "phone":
-			return /^\+?\d{1,3}[- .]?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}$/.test(input);
+			return /^(\+\d{1,3}|\(\+\d{1,3}\))?\s?\d{3,4}[\s-]?\d{3,4}$/.test(input);
 		case "birthdate":
 			return this.validateBirthdate(input);
 		case "address":
