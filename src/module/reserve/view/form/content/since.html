@@ -1,0 +1,20 @@
+<div class="field">
+    <label class="label">Select a start date</label>
+    <div class="control has-icons-right">
+        <input value="{{ reserve.since }}" name="since" id="date-start"
+            class="input {% if validation %} {% if validation.since %} is-success {% else %} is-danger {% endif %} {% endif %}"
+            type="text" placeholder="Since" value="{{ reserve.since }}" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.since %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+    </div>
+    {% if validation.since === false %}
+    <p class="help is-danger">Invalid date</p>
+    {% endif %}
+</div>

@@ -1,0 +1,19 @@
+<div class="field">
+    <label class="label">Payment method</label>
+    <div class="control">
+        <div class="select">
+            <select name="payment-method" id="payment-method">
+                <option {% if reserve.paymentMethod==="Cash" %} selected {% endif %} value="Cash">Cash</option>
+                <option {% if reserve.paymentMethod==="Paypal" %} selected {% endif %} value="Paypal">Paypal</option>
+                <option {% if reserve.paymentMethod==="Credit card" %} selected {% endif %} value="Credit card">Credit card</option>
+                <option {% if reserve.paymentMethod==="Debit card" %} selected {% endif %} value="Debit card">Debit card</option>
+            </select>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.paymentMethod %}  is-danger {% endif %} {% endif %}">
+            {% if validation.paymentMethod === false %}
+            Invalid fuel option. You must select a valid one.
+            {% endif %}
+        </p>
+    </div>
+</div>

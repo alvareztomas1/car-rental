@@ -1,0 +1,20 @@
+<div class="field">
+    <label class="label">Select an end date</label>
+    <div class="control has-icons-right">
+        <input value="{{ reserve.until }}" name="until" id="date-end"
+            class="input {% if validation %} {% if validation.since %} is-success {% else %} is-danger {% endif %} {% endif %}"
+            type="text" placeholder="Until"  value="{{ reserve.until }}" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.until %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+    </div>
+    {% if validation.until === false %}
+    <p class="help is-danger">Invalid date</p>
+    {% endif %}
+</div>
