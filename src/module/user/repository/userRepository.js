@@ -4,9 +4,10 @@ const UserNotFoundError = require("./error/userNotFoundError");
 const CouldNotDeleteUser = require("./error/couldNotDeleteUser");
 
 module.exports = class UserRepository extends AbstractRepository {
-	constructor(userModel) {
+	constructor(userModel, reserveModel) {
 		super();
 		this.userModel = userModel;
+		this.reserveModel = reserveModel;
 	}
 
 	async getAll() {
@@ -64,6 +65,17 @@ module.exports = class UserRepository extends AbstractRepository {
 	}
 
 	async delete(id) {
+
+		const userHasReservation = await this.reserveModel.findOne({
+			where: {
+				fk_user_id: id
+			}
+		});
+
+		if(userHasReservation) {
+			throw new CouldNotDeleteUser("User has reservation");
+		}
+
 		const userToDelete = await this.getById(id);
 
 		const deleteUser = await this.userModel.destroy({
@@ -72,7 +84,6 @@ module.exports = class UserRepository extends AbstractRepository {
 			}
 		});
 
-		// TODO: Verifies if the user has any reservation
 		
 		if(!deleteUser) {
 			throw new CouldNotDeleteUser("Could not delete user");

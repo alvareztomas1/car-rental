@@ -48,8 +48,6 @@ function configureCarModel(container){
 
 function configureReserveModel(container){
 	ReserveModel.setup(container.get("Sequelize"));
-	ReserveModel.setUpAssociations(container.get("CarModel"));
-
 	ReserveModel.setUpAssociations(container.get("CarModel"),  container.get("UserModel"));
 	return ReserveModel;
 }
@@ -89,7 +87,7 @@ function addUserModuleDefinitions(container){
 	container.addDefinitions({
 		UserController: object(UserController).construct(get("UserService")),
 		UserService: object(UserService).construct(get("UserRepository")),
-		UserRepository: object(UserRepository).construct(get("UserModel")),
+		UserRepository: object(UserRepository).construct(get("UserModel"), get("ReserveModel")),
 		UserModel: factory(configureUserModel),
 	});
 }
