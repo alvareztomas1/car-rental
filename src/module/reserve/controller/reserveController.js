@@ -23,7 +23,6 @@ module.exports = class ReserveController extends AbstractController {
 
 	async index(req, res) {
 		const reserves = await this.reserveService.getAll();
-
 		res.render("reserve/view/index.html", { reserves: reserves ? reserves : false, pageTitle: "Cars reserves" });
 	}
 
@@ -131,9 +130,11 @@ module.exports = class ReserveController extends AbstractController {
 
 		try{
 			const reserve = await this.reserveService.getById(id);
+			const users = await this.userService.getAll();
+
 			const car = reserve.car;
-			
-			res.render("reserve/view/form/form.html", { car, reserve, pageTitle: "Reserve a car" });	
+
+			res.render("reserve/view/form/form.html", { car, users, reserve, pageTitle: "Reserve a car" });	
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
