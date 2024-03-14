@@ -58,13 +58,13 @@ module.exports = class CarRepository extends AbstractRepository {
 
 	}
 	async delete(id){
-		const teamBackup = await this.getById(id);
 		const teamIsReserved = await this.reserveModel.findOne({ where: { fk_car_id: id } });
 
 		if(teamIsReserved){
 			throw new CarIsReservedError("Car is reserved");
 		}
-
+		
+		const teamBackup = await this.getById(id);
 		const deletedTeam = await this.carModel.destroy({ where: { id } });
 
 		if(!deletedTeam){
