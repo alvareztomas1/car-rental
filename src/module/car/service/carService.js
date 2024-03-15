@@ -27,7 +27,7 @@ module.exports = class CarService extends AbstractService {
 
 	async delete(id) {
 		if (id === undefined) {
-			throw new CarNotDefinedError("Car is not defined");
+			throw new CarIdNotDefinedError("Car is not defined");
 		}
 
 		return this.carRepository.delete(id);
