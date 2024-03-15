@@ -76,8 +76,10 @@ module.exports = class CarController extends AbstractController {
 					size: size
 				};
 			}
-
-			const validation = this.carService.validateForm(car);
+			
+			const validation = this.carService.validateForm(car, (key, value) => {
+				return this.carService.validateField(key, value);
+			});
 			const validationIsSuccess = !Object.values(validation).includes(false);
 	
 			if (validationIsSuccess){

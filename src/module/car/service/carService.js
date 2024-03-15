@@ -32,18 +32,17 @@ module.exports = class CarService extends AbstractService {
 
 		return this.carRepository.delete(id);
 	}
-	validateForm(data) {
+	validateForm(data, validateFieldCallbackFunction) {
 		const validation = {};
 
 		Object.keys(data).forEach((key) => {
-			validation[`${key}`] = this.validateField(key, data[key]);
+			validation[`${key}`] = validateFieldCallbackFunction(key, data[key]);
 		});
 
 		return validation;
 	}
 
 	validateField(type, input) {
-
 		switch (type) {
 
 		case "id":
