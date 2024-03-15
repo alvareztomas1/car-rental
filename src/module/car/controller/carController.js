@@ -97,7 +97,7 @@ module.exports = class CarController extends AbstractController {
 		}
 		catch (e) {
 			req.session.errors = [e.message, e.stack];
-			res.render("/car");
+			res.redirect("/car");
 		}
 	}
 	async delete(req, res){
