@@ -3,6 +3,7 @@ const { fromModelToCarEntity } = require("../mapper/carMapper");
 const CarNotFoundError = require("./error/carNotFoundError");
 const CarIsReservedError = require("./error/carIsReservedError");
 const CouldNotDeleteCarError = require("./error/couldNotDeleteCarError");
+const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 
 module.exports = class CarRepository extends AbstractRepository {
 	constructor(carModel, reserveModel) {
@@ -18,18 +19,22 @@ module.exports = class CarRepository extends AbstractRepository {
 		return cars.map((carData) => fromModelToCarEntity(carData.toJSON()));
 	}
 	async getById(id) {
+
+		if(id === undefined){
+			throw new CarIdNotDefinedError("Car id is not defined");
+		}
+
 		const car = await this.carModel.findByPk(id, {
 			attributes: { exclude: ["created_at", "updated_at"] },
 		});
-		
-		if (car === undefined) {
+
+		if (!car) {
 			throw new CarNotFoundError("Car not found");
 		}
 		
 		return fromModelToCarEntity(car.toJSON());
 	}
 	async save(car){
-
 		const carModelToSave = {
 			id: car.id ? car.id : undefined,
 			brand: car.brand,
@@ -58,6 +63,11 @@ module.exports = class CarRepository extends AbstractRepository {
 
 	}
 	async delete(id){
+
+		if(id === undefined){
+			throw new CouldNotDeleteCarError;
+		}
+
 		const teamIsReserved = await this.reserveModel.findOne({ where: { fk_car_id: id } });
 
 		if(teamIsReserved){
@@ -65,11 +75,7 @@ module.exports = class CarRepository extends AbstractRepository {
 		}
 		
 		const teamBackup = await this.getById(id);
-		const deletedTeam = await this.carModel.destroy({ where: { id } });
-
-		if(!deletedTeam){
-			throw new CouldNotDeleteCarError("Could not delete car");
-		}
+		await this.carModel.destroy({ where: { id } });
 
 		return teamBackup;
 	}

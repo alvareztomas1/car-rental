@@ -33,7 +33,7 @@ module.exports = class CarController extends AbstractController {
 	async view(req, res) {
 		const id = req.params.id;
 
-		if (!id) {
+		if (id === undefined) {
 			throw new CarIdNotDefinedError("Car id not defined");
 		}
 
@@ -76,12 +76,12 @@ module.exports = class CarController extends AbstractController {
 					size: size
 				};
 			}
-			
+
 			const validation = this.carService.validateForm(car, (key, value) => {
 				return this.carService.validateField(key, value);
 			});
 			const validationIsSuccess = !Object.values(validation).includes(false);
-	
+			
 			if (validationIsSuccess){
 				const savedCar = await this.carService.save(car);
 
@@ -90,7 +90,6 @@ module.exports = class CarController extends AbstractController {
 				} else {
 					req.session.messages = [`${savedCar.brand} ${savedCar.model} ${savedCar.year} added succesfully`];
 				}
-
 				res.redirect("/car");
 			}
 			else {

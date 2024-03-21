@@ -78,7 +78,8 @@ module.exports = class CarModel extends AbstractModel{
 				timestamps: false
 			}
 		);
-
+		
+		return CarModel;
 	}
 
 };
