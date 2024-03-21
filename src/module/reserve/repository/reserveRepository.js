@@ -3,7 +3,7 @@ const { fromModelToReserveEntity } = require("../mapper/reserveMapper");
 const { fromModelToCarEntity } = require("../../car/mapper/carMapper");
 const { fromModelToUserEntity } = require("../../user/mapper/userMapper");
 const ReserveNotFoundError = require("./error/reserveNotFoundError");
-const CouldNotDeleteReserve = require("./error/couldNotDeleteReserve");
+const ReserveIdNotDefinedError = require("./error/reserveIdNotDefinedError");
 
 module.exports = class ReserveRepository extends AbstractRepository {
 	constructor(reserveModel, carModel, userModel) {
@@ -26,7 +26,6 @@ module.exports = class ReserveRepository extends AbstractRepository {
 				}],
 			attributes: {exclude: ["fk_car_id", "fk_user_id", "created_at", "updated_at"]}
 		});
-		
 		if(reserves.length === 0){
 			return false;
 		}
@@ -35,11 +34,16 @@ module.exports = class ReserveRepository extends AbstractRepository {
 			const result = fromModelToReserveEntity(reserve.toJSON());
 			result.car = fromModelToCarEntity(result.car);
 			result.user = fromModelToUserEntity(result.user);
+
 			return result;
 		});
 		
 	}
 	async getById(id) {
+		if(id === undefined){
+			throw new ReserveIdNotDefinedError("Reserve id not defined");
+		}
+
 		const reserve = await this.reserveModel.findByPk(id, {
 			include: [
 				{
@@ -51,10 +55,10 @@ module.exports = class ReserveRepository extends AbstractRepository {
 				}],
 			attributes: {exclude: ["fk_car_id", "fk_user_id", "created_at", "updated_at"]}
 		});
-		if ( reserve === undefined ) {
+
+		if (!reserve) {
 			throw new ReserveNotFoundError("Reserve not found");
 		}
-
 		const result = fromModelToReserveEntity(reserve.toJSON());
 		result.car = fromModelToCarEntity(result.car);
 		result.user = fromModelToUserEntity(result.user);
@@ -82,23 +86,24 @@ module.exports = class ReserveRepository extends AbstractRepository {
 		
 		let reserveModel = this.reserveModel.build(reserveToSave, buildOptions);
 		reserveModel = await reserveModel.save();
-		
 		const result = await this.getById(reserveModel.id);
 
 		return result;
 		
 	}
 	async delete(id) {
+
+		if(id === undefined){
+			throw new ReserveIdNotDefinedError("Reserve id not defined");
+		}
+
 		const reserve = await this.getById(id);
 
-		const deleteReserve = await this.reserveModel.destroy({
+		await this.reserveModel.destroy({
 			where: { id }
 		});
 
-		if(!deleteReserve) {
-			throw new CouldNotDeleteReserve("Could not delete reserve");
-		}
-		
+
 		return reserve;
 	}
 
