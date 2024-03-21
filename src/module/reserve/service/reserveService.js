@@ -8,17 +8,17 @@ module.exports = class ReserveService extends AbstractService {
 		this.carService = carService;
 		this.userService = userService;
 	}
-	getAll(){
+	async getAll(){
 		return this.reserveRepository.getAll();
 	}
-	getById(id){
+	async getById(id){
 		if(id === undefined){
 			throw new ReserveNotDefinedError("Reserve is not defined");
 		}
 
 		return this.reserveRepository.getById(id);
 	}
-	save(reserve) {
+	async save(reserve) {
 		if(reserve === undefined){
 			throw new ReserveNotDefinedError("Reserve is not defined");
 		}
@@ -27,11 +27,11 @@ module.exports = class ReserveService extends AbstractService {
 	}
 
 	calculateCost(since, until, carPrice){
-		const days = Math.floor((new Date(until) - new Date(since)) / (1000 * 60 * 60 * 24));
-		return Math.floor((days === 0 ? 1 : days) * carPrice);
+		const days = Math.floor((new Date(until) - new Date(since)) / (1000 * 60 * 60 * 24)) + 1;
+		return Math.floor(days * carPrice);
 	}
 
-	delete(id){
+	async delete(id){
 		if(id === undefined){
 			throw new ReserveNotDefinedError("Reserve is not defined");
 		}
@@ -39,11 +39,11 @@ module.exports = class ReserveService extends AbstractService {
 		return this.reserveRepository.delete(id);
 	}
 
-	validate(data){
+	validate(data, callBackFunction){
 		const validation = {};
 
 		Object.keys(data).forEach((field) => {
-			validation[`${field}`] = this.validateField(field, data[field]);
+			validation[`${field}`] = callBackFunction(field, data[field]);
 		});
 
 		return validation;
@@ -52,10 +52,46 @@ module.exports = class ReserveService extends AbstractService {
 	validateField(type, input){
 		
 		switch(type){
-		case "since":
-			return this.validateDate(input);
-		case "until":
-			return this.validateDate(input);
+		case "since":{
+			const match = input.match(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+			if (!match) return false;
+
+			const year = parseInt(match[0]);
+			const month = parseInt(match[1]);
+			const day = parseInt(match[2]);
+
+			const currentYear = new Date().getFullYear();
+
+			if (year < currentYear || year > currentYear + 1) return false;
+
+			const daysInMonth = new Date(year, month, 0).getDate();
+			if (isNaN(year) || isNaN(month) || isNaN(day) || day < 1 || day > daysInMonth) {
+				return false;
+			}
+
+			return true;
+		}	
+		case "until":{
+			const match = input.match(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+			if (!match) return false;
+
+			const year = parseInt(match[0]);
+			const month = parseInt(match[1]);
+			const day = parseInt(match[2]);
+
+			const currentYear = new Date().getFullYear();
+
+			if (year < currentYear || year > currentYear + 1) return false;
+
+			const daysInMonth = new Date(year, month, 0).getDate();
+			if (isNaN(year) || isNaN(month) || isNaN(day) || day < 1 || day > daysInMonth) {
+				console.log("llega al if");
+
+				return false;
+			}
+
+			return true;
+		}
 		case "id":{
 			return input === "" || !!this.getById(input);
 		}
@@ -68,25 +104,5 @@ module.exports = class ReserveService extends AbstractService {
 		}
 		
 		
-	}
-
-	validateDate(date){
-		const match = date.match(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
-		if (!match) return false;
-
-		const year = parseInt(match[0]);
-		const month = parseInt(match[1]);
-		const day = parseInt(match[2]);
-
-		const currentYear = new Date().getFullYear();
-
-		if (year < currentYear || year > currentYear + 1) return false;
-
-		const daysInMonth = new Date(year, month, 0).getDate();
-		if (isNaN(year) || isNaN(month) || isNaN(day) || day < 1 || day > daysInMonth) {
-			return false;
-		}
-
-		return true;
 	}
 };

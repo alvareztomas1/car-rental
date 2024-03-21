@@ -9,18 +9,18 @@ module.exports = class UserService extends AbstractService {
 		this.userRespotiroy = userRespotiroy;
 	}
 
-	getAll(){
+	async getAll(){
 		return this.userRespotiroy.getAll();
 	}
 
-	getById(id){
+	async getById(id){
 		if(id === undefined){
 			throw new UserIdNotDefinedError("User id not defined");
 		}
 		return this.userRespotiroy.getById(id);
 	}
 
-	save(user) {
+	async save(user) {
 		
 		if (user === undefined) {
 			throw new UserNotDefinedError("User is not defined");
@@ -29,7 +29,7 @@ module.exports = class UserService extends AbstractService {
 		return this.userRespotiroy.save(user);
 	}
 
-	delete(id) {
+	async delete(id) {
 
 		if (id === undefined) {
 			throw new UserIdNotDefinedError("User id is not defined");
@@ -38,11 +38,11 @@ module.exports = class UserService extends AbstractService {
 		return this.userRespotiroy.delete(id);
 	}
 
-	validate(data) {
+	validate(data, callbackFunction) {
 		const validation = {};
 
 		Object.keys(data).forEach((key) => {
-			validation[key] = this.validateField(key, data[key]);
+			validation[key] = callbackFunction(key, data[key]);
 		});
 
 		return validation;
@@ -263,34 +263,34 @@ module.exports = class UserService extends AbstractService {
 			return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input);
 		case "phone":
 			return /^(\+\d{1,3}|\(\+\d{1,3}\))?\s?\d{3,4}[\s-]?\d{3,4}$/.test(input);
-		case "birthdate":
-			return this.validateBirthdate(input);
+		case "birthdate":{
+			const match = input.match(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+			if (!match) return false;
+
+			const birthdate = new Date(input);
+
+			const minDate = new Date("1900-01-01");
+			if(birthdate < minDate) return false;
+
+			const currentDate = new Date();
+			const dateEighteenYearsAgo = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
+			if(birthdate >= dateEighteenYearsAgo) return false;
+
+			const year = parseInt(match[0]);
+			const month = parseInt(match[1]);
+			const day = parseInt(match[2]);
+			const daysInMonth = new Date(year, month, 0).getDate();
+
+			if (isNaN(year) || isNaN(month) || isNaN(day) || day < 1 || day > daysInMonth) {
+				return false;
+			}
+			
+			return true;
+		}	
 		case "address":
-			return /^[a-zA-Z0-9\s.,#-]+$/.test(input);
+			return /^[a-zA-Z0-9\s.,#°-]{1,100}$/.test(input);
 		}
 	}
 
-	validateBirthdate(date){
-		const match = date.match(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
-		if (!match) return false;
 
-		const birthdate = new Date(date);
-		if(!birthdate) return false;
-
-		const currentDate = new Date();
-		const dateEighteenYearsAgo = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
-		if(birthdate >= dateEighteenYearsAgo) return false;
-
-		const minDate = new Date("1900-01-01");
-		if(birthdate >= minDate) return true;
-
-		const daysInMonth = new Date(year, month, 0).getDate();
-		const year = parseInt(match[0]);
-		const month = parseInt(match[1]);
-		const day = parseInt(match[2]);
-		if (isNaN(year) || isNaN(month) || isNaN(day) || day < 1 || day > daysInMonth) {
-			return false;
-		}
-
-	}
 };

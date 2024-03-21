@@ -78,7 +78,9 @@ module.exports = class ReserveController extends AbstractController {
 			};
 
 			const reserve = fromDataToReserveEntity(reserveToSave);
-			const validation = this.reserveService.validate(dataToValidate);
+			const validation = this.reserveService.validate(reserveData, (field, input) => {
+				return this.carService.validateField(field, input);
+			});
 			const validationIsSuccess = !Object.values(validation).includes(false);
 
 			if (validationIsSuccess) {

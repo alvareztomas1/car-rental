@@ -35,12 +35,13 @@ module.exports = class UserController extends AbstractController{
 	async save(req, res){
 		const formData = fromDataToUserEntity(req.body);
 		try{
-			const validation = this.userService.validate(formData);
-			const validationIsSuccess = !Object.values(validation).includes(false);
 
+			const validation = this.userService.validate(formData, (key, input) => {
+				return this.userService.validateField(key, input);
+			});
+			const validationIsSuccess = !Object.values(validation).includes(false);
 			if(validationIsSuccess){
 				const savedUser = await this.userService.save(formData);
-
 				if(formData.id){
 					req.session.messages = [`User #${savedUser.id} edited succesfully`];
 				}else{
