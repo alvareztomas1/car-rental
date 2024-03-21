@@ -64,5 +64,7 @@ module.exports = class UserModel extends AbstractModel{
 		);
 
 		UserModel.sync({ force: false });
+		
+		return UserModel;
 	}
 };

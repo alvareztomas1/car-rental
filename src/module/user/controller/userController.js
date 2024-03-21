@@ -15,17 +15,12 @@ module.exports = class UserController extends AbstractController{
 		app.get(`${ROUTE}/create`, this.create.bind(this));
 		app.post(`${ROUTE}/create`, this.save.bind(this));
 		app.post(`${ROUTE}/delete/:id`, this.delete.bind(this)); 
-		app.get(`${ROUTE}/edit/:id`, this.edit.bind(this));     
+		app.get(`${ROUTE}/edit/:id`, this.edit.bind(this)); 
 	}
 
 	async index(req, res){
-		try{
-			const users = await this.userService.getAll();
-			res.render("user/view/index.html", { users: users ? users : false, pageTitle: "Users list" });
-		}catch(e){
-			req.session.errors = [e.message, e.stack];
-			res.redirect("/");
-		}
+		const users = await this.userService.getAll();
+		res.render("user/view/index.html", { users: users ? users : false, pageTitle: "Users list" });
 	}
 
 	create(req, res){
@@ -59,8 +54,13 @@ module.exports = class UserController extends AbstractController{
 	}
 
 	async delete(req, res){
+		const userId = req.params.id;
+
+		if(userId === undefined){
+			throw new UserIdNotDefinedError("User id is not defined");
+		}
+
 		try{
-			const userId = req.params.id;
 			const deletedUser = await this.userService.delete(userId);
 
 			req.session.messages = [`User #${deletedUser.id} ${deletedUser.names} ${deletedUser.surnames} deleted succesfully`];

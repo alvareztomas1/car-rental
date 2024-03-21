@@ -2,6 +2,7 @@ const AbstractRepository = require("../../abstractRepository");
 const { fromModelToUserEntity } = require("../mapper/userMapper");
 const UserNotFoundError = require("./error/userNotFoundError");
 const CouldNotDeleteUser = require("./error/couldNotDeleteUser");
+const UserIdNotDefinedError = require("./error/userIdNotDefinedError");
 
 module.exports = class UserRepository extends AbstractRepository {
 	constructor(userModel, reserveModel) {
@@ -26,13 +27,17 @@ module.exports = class UserRepository extends AbstractRepository {
 	}
 
 	async getById(id) {
+		if(id === undefined){
+			throw new UserIdNotDefinedError("User id is not defined");
+		}
+
 		const user = await this.userModel.findByPk(id, {
 			attributes: {
 				exclude: ["created_at", "updated_at"]
 			}
 		});
 
-		if (user === undefined) {
+		if (!user) {
 			throw new UserNotFoundError("User not found");
 		}
 
@@ -66,28 +71,27 @@ module.exports = class UserRepository extends AbstractRepository {
 
 	async delete(id) {
 
+		if(id === undefined) {
+			throw new UserIdNotDefinedError("User id not defined");
+		}
+
 		const userHasReservation = await this.reserveModel.findOne({
 			where: {
 				fk_user_id: id
 			}
 		});
-
 		if(userHasReservation) {
 			throw new CouldNotDeleteUser("User has reservation");
 		}
 
 		const userToDelete = await this.getById(id);
 
-		const deleteUser = await this.userModel.destroy({
+		await this.userModel.destroy({
 			where: {
 				id
 			}
 		});
-
 		
-		if(!deleteUser) {
-			throw new CouldNotDeleteUser("Could not delete user");
-		}
 
 		return userToDelete;
 	}
