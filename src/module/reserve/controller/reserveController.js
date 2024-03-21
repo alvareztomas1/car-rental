@@ -27,20 +27,21 @@ module.exports = class ReserveController extends AbstractController {
 	}
 
 	async create(req, res) {
+		const id = req.params.id;
+
+		if (id === undefined) {
+			throw new CarIdNotDefinedError("Car id not defined");
+		}
+
+		const users = await this.userService.getAll();
+		
+		if(!users){
+			throw new NoUsersFoundError("No users found. Create an User first");
+		}
+
 		try {
-			const id = req.params.id;
-			if (id === undefined) {
-				throw new CarIdNotDefinedError("Car id not defined");
-			}
 			const car = await this.carService.getById(id);
-			const users = await this.userService.getAll();
-			
-			if(!users){
-				throw new NoUsersFoundError("No users found. Create an User first");
-			}
-
 			res.render("reserve/view/form/form.html", { car, users, pageTitle: "Reserve a car" });
-
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
@@ -48,33 +49,28 @@ module.exports = class ReserveController extends AbstractController {
 	}
 	
 	async save(req, res) {
-		const { since, until, id } = req.body;
-		const carId = req.body["car-id"];
-		const userId = req.body["user-id"];
-
-		const dataToValidate = {
-			id,
-			carId,
-			userId,
-			since,
-			until,
+		const reserveData = {
+			id: req.body.id,
+			carId: req.body["car-id"],
+			userId: req.body["user-id"],
+			since: req.body.since,
+			until: req.body.until,
 			paymentMethod: req.body["payment-method"]
 		};
 
 		try {
-			const car = await this.carService.getById(carId);
-			const user = await this.userService.getById(userId);
-
+			const car = await this.carService.getById(reserveData.carId);
+			const user = await this.userService.getById(reserveData.userId);
 			const reserveToSave = {
-				id, 
+				id: reserveData.id, 
 				car,
 				user, 
-				since, 
-				until,
+				since: reserveData.since, 
+				until: reserveData.until,
 				pricePerDay: car.price,
-				totalPrice: this.reserveService.calculateCost(since, until, car.price),
-				payed: dataToValidate.paymentMethod === "Cash" ? false : true,
-				paymentMethod: dataToValidate.paymentMethod 
+				totalPrice: this.reserveService.calculateCost(reserveData.since, reserveData.until, car.price),
+				payed: reserveData.paymentMethod === "Cash" ? false : true,
+				paymentMethod: reserveData.paymentMethod 
 			};
 
 			const reserve = fromDataToReserveEntity(reserveToSave);
@@ -86,7 +82,7 @@ module.exports = class ReserveController extends AbstractController {
 			if (validationIsSuccess) {
 				const savedReserve = await this.reserveService.save(reserve);
 				
-				if(id){
+				if(reserveData.id){
 					req.session.messages = [`Reserve #${savedReserve.id} of ${savedReserve.car.brand} ${savedReserve.car.model} ${savedReserve.car.year} edited succesfully`];
 				}else{
 					req.session.messages = [`${savedReserve.car.brand} ${savedReserve.car.model} ${savedReserve.car.year} reserved succesfully`];
@@ -97,7 +93,6 @@ module.exports = class ReserveController extends AbstractController {
 				const users = await this.userService.getAll();
 				res.render("reserve/view/form/form.html", { car, users, reserve, validation, pageTitle: "Reserve a car" });
 			}
-
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
