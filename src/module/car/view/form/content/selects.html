@@ -1,0 +1,225 @@
+<div class="columns">
+    <div class="column">
+        <div class="field">
+            <label class="label">Reserved</label>
+            <div class="control">
+                <div class="select">
+                    <select name="reserved" id="reserved">
+                        <option value="0" {% if data.car.reserved === 0 %} selected {% endif %}>No</option>
+                        <option value="1" {% if data.car.reserved === 1 %} selected {% endif %}>Yes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.reserved %}  is-danger {% endif %} {% endif %}">
+            {% if validation.reserved === false %}
+            Invalid reserved option. You must select a valid one.
+            {% endif %}
+        </p>
+        <span class="icon is-small is-right">
+            {% if validation %}
+            {% if validation.reserved %}
+            <i class="fas fa-check"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="column">
+        <div class="field">
+            <label class="label">Transmission</label>
+            <div class="control">
+                <div class="select">
+                    <select name="transmission" id="transmission">
+                        <option value="Manual" {% if data.car.transmission==="Manual" %} selected {% endif %}>Manual
+                        </option>
+                        <option value="Automatic" {% if data.car.transmission==="Automatic" %} selected {% endif %}>
+                            Automatic</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.transmission %}  is-danger {% endif %} {% endif %}">
+            {% if validation.transmission === false %}
+            Invalid transmission option. You must select a valid one.
+            {% endif %}
+        </p>
+        <span class="icon is-small is-right">
+            {% if validation %}
+            {% if validation.transmission %}
+            <i class="fas fa-check"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="column">
+        <div class="field">
+            <label for="fuel" class="label">Fuel</label>
+            <div class="control">
+                <div class="select">
+                    <select id="fuel" name="fuel">
+                        <option value="Gasoline" {% if data.car.fuel==="Gasoline" %} selected {% endif %}>Gasoline
+                        </option>
+                        <option value="Hybrid" {% if data.car.fuel==="Hybrid" %} selected {% endif %}>Hybrid</option>
+                        <option value="Electric" {% if data.car.fuel==="Electric" %} selected {% endif %}>Electric
+                        </option>
+                        <option value="Diesel" {% if data.car.fuel==="Diesel" %} selected {% endif %}>Diesel</option>
+                        <option value="Natural-gas" {% if data.car.fuel==="Natural-gas" %} selected {% endif %}>Natural
+                            gas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.fuel %}  is-danger {% endif %} {% endif %}">
+            {% if validation.fuel === false %}
+            Invalid fuel option. You must select a valid one.
+            {% endif %}
+        </p>
+        <span class="icon is-small is-right">
+            {% if validation %}
+            {% if validation.fuel %}
+            <i class="fas fa-check"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="column">
+        <div class="field">
+            <label class="label">Unlimited mileage</label>
+            <div class="control">
+                <div class="select">
+                    <select name="unlimited-mileage" id="unlimited-mileage">
+                        <option value="1" {% if data.car.unlimitedMileage === 1 %} selected {% endif %}>Yes</option>
+                        <option value="0" {% if data.car.unlimitedMileage === 0 %} selected {% endif %}>No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.unlimitedMileage %}  is-danger {% endif %} {% endif %}">
+            {% if validation.unlimitedMileage === false %}
+            Invalid unlimited mileage option. You must select a valid one.
+            {% endif %}
+        </p>
+        <span class="icon is-small is-right">
+            {% if validation %}
+            {% if validation.unlimitedMileage %}
+            <i class="fas fa-check"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+            {% endif %}
+        </span>
+    </div>
+
+</div>
+
+<div class="columns">
+
+    <div class="column">
+        <div class="field">
+            <label class="label">Air conditioning</label>
+            <div class="control">
+                <div class="select">
+                    <select name="air-conditioning" id="air-conditioning">
+                        <option value="1" {% if data.car.airConditioning === 1 %} selected {% endif %}>Yes</option>
+                        <option value="0" {% if data.car.airConditioning === 0 %} selected {% endif %}>No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.airConditioning %}  is-danger {% endif %} {% endif %}">
+            {% if validation.airConditioning === false %}
+            Invalid air conditioning option. You must select a valid one.
+            {% endif %}
+        </p>
+        <span class="icon is-small is-right">
+            {% if validation %}
+            {% if validation.airConditioning %}
+            <i class="fas fa-check"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+            {% endif %}
+        </span>
+
+    </div>
+
+    <div class="column">
+        <div class="field">
+            <label class="label">Seats</label>
+            <div class="control">
+                <div class="select">
+                    <select name="seats" id="seats">
+                        <option value="2" {% if data.car.seats==="2" %} selected {% endif %}>2</option>
+                        <option value="4" {% if data.car.seats==="4" %} selected {% endif %}>4</option>
+                        <option value="5" {% if data.car.seats==="5" %} selected {% endif %}>5</option>
+                        <option value="6" {% if data.car.seats==="6" %} selected {% endif %}>6</option>
+                        <option value="7" {% if data.car.seats==="7" %} selected {% endif %}>7</option>
+                        <option value="8" {% if data.car.seats==="8" %} selected {% endif %}>8</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.seats %}  is-danger {% endif %} {% endif %}">
+            {% if validation.seats === false %}
+            Invalid seats number. You must select a valid option.
+            {% endif %}
+        </p>
+        <span class="icon is-small is-right">
+            {% if validation %}
+            {% if validation.seats %}
+            <i class="fas fa-check"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="column">
+        <div class="field">
+            <label class="label">Doors</label>
+            <div class="control">
+                <div class="select">
+                    <select name="doors" id="doors">
+                        <option value="2" {% if data.car.doors==="2" %} selected {% endif %}>2</option>
+                        <option value="3" {% if data.car.doors==="3" %} selected {% endif %}>3</option>
+                        <option value="4" {% if data.car.doors==="4" %} selected {% endif %}>4</option>
+                        <option value="5" {% if data.car.doors==="5" %} selected {% endif %}>5</option>
+                        <option value="6" {% if data.car.doors==="6" %} selected {% endif %}>6</option>
+                        <option value="7" {% if data.car.doors==="7" %} selected {% endif %}>7</option>
+                    </select>
+                </div>
+            </div>
+            <p
+                class="help {% if validation %} {% if not validation.doors %} is-danger {% endif %} {% endif %}">
+                {% if validation.doors === false %}
+                Invalid doors number. You must select a valid option.
+                {% endif %}
+            </p>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.doors %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>

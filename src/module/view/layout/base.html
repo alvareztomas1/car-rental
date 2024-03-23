@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/node_modules/bulma/css/bulma.min.css">
+  <link rel="stylesheet" type="text/css" href="/styles/main.css">
+  <link rel="stylesheet" type="text/css" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/node_modules/flatpickr/dist/flatpickr.min.css">
+  <link rel="icon" type="image/png" href="/logo/favicon.png">
+  <title>{{ pageTitle }}</title>
+</head>
+
+<body>
+  <br>
+  <nav class="navbar custom-navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <h1 class="title">Car Rental Web</h1>
+      </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbar-menu" class="navbar-menu">
+      <div class="navbar-start">
+        <a href="/" class="navbar-item">
+          Home
+        </a>
+        <a href="/car/create" class="navbar-item">
+          Add new car
+        </a>
+        <a href="/reserve/list" class="navbar-item">
+          Reserves
+        </a>
+        <a class="navbar-item">
+          Reset cars
+        </a>
+  </nav>
+
+
+
+
+  {% block body %}{% endblock %}
+
+
+
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+    // Add a click event on each of them
+    $navbarBurgers.forEach(el => {
+      el.addEventListener('click', () => {
+
+        // Get the target from the "data-target" attribute
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        el.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+
+      });
+    });
+
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Functions to open and close a modal
+    function openModal($el) {
+      $el.classList.add('is-active');
+    }
+
+    function closeModal($el) {
+      $el.classList.remove('is-active');
+    }
+
+    function closeAllModals() {
+      (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+        closeModal($modal);
+      });
+    }
+
+    // Add a click event on buttons to open a specific modal
+    (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+      const modal = $trigger.dataset.target;
+      const $target = document.getElementById(modal);
+
+      $trigger.addEventListener('click', () => {
+        openModal($target);
+      });
+    });
+
+    // Add a click event on various child elements to close the parent modal
+    (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+      const $target = $close.closest('.modal');
+
+      $close.addEventListener('click', () => {
+        closeModal($target);
+      });
+    });
+
+    // Add a keyboard event to close all modals
+    document.addEventListener('keydown', (event) => {
+      if (event.key === "Escape") {
+        closeAllModals();
+      }
+    });
+  });
+</script>
+<script>
+  const fileInput = document.querySelector('#file-image input[type=file]');
+  fileInput.onchange = () => {
+    if (fileInput.files.length > 0) {
+      const fileName = document.querySelector('#file-image .file-name');
+      fileName.textContent = fileInput.files[0].name;
+    }
+  }
+</script>
+<script src="/node_modules/flatpickr/dist/flatpickr.min.js"></script>
+<script>
+  var currentDate = new Date();
+
+  var maxDate = new Date();
+  maxDate.setFullYear(currentDate.getFullYear() + 1);
+
+  flatpickr("#date-start", {
+    dateFormat: "Y-m-d",
+    minDate: "today", 
+    maxDate: maxDate, 
+    onClose: function (selectedDates) {
+      flatpickr("#date-end", {
+        minDate: selectedDates[0],
+        maxDate: maxDate 
+      });
+    }
+  });
+</script>
+
+</html>

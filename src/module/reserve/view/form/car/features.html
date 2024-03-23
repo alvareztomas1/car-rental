@@ -1,0 +1,28 @@
+<div id="features">
+    {% if data.car.unlimitedMileage %}
+    <div class="columns is-centered">
+        <div class="icon-text is-centered">
+            <span class="icon has-text-success">
+                <i class="fas fa-check-square"></i>
+            </span>
+            <span> Unlimited mileage</span>
+        </div>
+    </div>
+    {% endif %}
+    <ul>
+        <div class="columns">
+            <div class="column">
+                <li>{{ data.car.transmission }}</li>
+                <li>{{ data.car.trunk }} L Trunk</li>
+                <li> {{ data.car.seats }} Seats </li>
+            </div>
+            <div class="column">
+                <li>{{ data.car.fuel }}</li>
+                {% if data.car.airConditioning %}
+                <li> Air conditioning</li>
+                {% endif %}
+                <li> {{ data.car.doors }} Doors</li>
+            </div>
+        </div>
+    </ul>
+</div>

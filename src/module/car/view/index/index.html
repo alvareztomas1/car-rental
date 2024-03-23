@@ -1,0 +1,35 @@
+{% extends "view/layout/base.html" %}
+
+{% block body %}
+
+{% include "car/view/index/content/notification.html" %}
+
+<div id="cars" class="columns is-centered is-multiline cars">
+    {% for car in data.cars %}
+    <div class="column is-one-quarter">
+        <div id={{car.id}} class="card car-card">
+            <header class="card-header">
+                <p class="card-header-title  is-centered">
+                    {% include "car/view/index/content/car-image.html" %}
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="content is-small">
+                    {% include "car/view/index/content/car-name.html" %}
+                    {% include "car/view/index/content/car-state.html" %}
+                    {% include "car/view/index/content/car-features.html" %}
+                </div>
+            </div>
+            <footer class="card-footer">
+                {% include "car/view/index/content/car-actions.html" %}
+            </footer>
+        </div>
+
+    </div>
+    
+    {% include "car/view/index/content/car-modal.html" %}
+
+    {% endfor %}
+</div>
+
+{% endblock %}

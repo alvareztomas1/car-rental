@@ -1,0 +1,1 @@
+module.exports = class CarIsReservedError extends Error{};

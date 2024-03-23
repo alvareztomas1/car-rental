@@ -1,0 +1,23 @@
+{% extends "view/layout/base.html" %}
+
+{% block body %}
+
+<br>
+
+{% if reserves %}
+
+<h1 class="title">Reserves</h1>
+
+<div class="container">
+    {% include "reserve/view/table/table.html" %}
+</div>
+
+{% else %}
+
+<p class="subtitle">There are no reserves yet.</p>
+
+{% endif %}
+
+<br>
+
+{% endblock %}
