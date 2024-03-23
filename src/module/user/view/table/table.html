@@ -1,0 +1,11 @@
+<table class="table is-bordered is-striped  is-hoverable is-fullwidth">
+    <thead>
+        {% include "user/view/table/headers.html" %}
+    </thead>
+    <tbody>
+    {% for user in users %}
+        {% include "user/view/table/user_data.html" %}
+        {% include "user/view/table/modal.html" %}
+    {% endfor %}
+    </tbody>
+</table>

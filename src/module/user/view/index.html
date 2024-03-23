@@ -1,0 +1,17 @@
+{% extends "view/layout/base.html" %}
+
+{% block body %}
+<br>
+
+{% if users %}
+
+<h1 class="title">Users</h1>
+{% include "user/view/table/table.html" %}
+
+{% else %}
+
+    <p class="subtitle">There are no users yet.</p>
+
+{% endif %}
+
+{% endblock %}  

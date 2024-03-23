@@ -1,19 +1,28 @@
 {% for reserve in reserves %}
 <tr>
-    <td>{{ reserve.reserve.id }}</td>
+    <td>{{ reserve.id }}</td>
     <td>
-        <a href="/car/view/{{reserve.reserve.car.id}}">{{ reserve.reserve.car.brand }}
-            {{ reserve.reserve.car.model }} {{ reserve.reserve.car.year }}
+        <a href="/car/view/{{reserve.car.id}}">{{ reserve.car.brand }}
+            {{ reserve.car.model }} {{ reserve.car.year }}
         </a>
     </td>
+    <td>#{{reserve.user.id}} {{ reserve.user.names }} {{ reserve.user.surnames }}</td>
     <td>
         <figure class="image is-5by3">
-            <img src="{{ reserve.reserve.car.image }}">
+            <img src="{{ reserve.car.image }}">
         </figure>
     </td>
-    <td>{{ reserve.reserve.since }}</td>
-    <td>{{ reserve.reserve.until }}</td>
-    <td><span class="tag is-success is-small">{{ reserve.price }}$</span></td>
+    <td>{{ reserve.since }}</td>
+    <td>{{ reserve.until }}</td>
+    <td><span class="tag is-success is-small">{{ reserve.pricePerDay }}$</span></td>
+    <td><span class="tag is-success is-small">{{ reserve.totalPrice }}$</span></td>
+    <td>{{ reserve.paymentMethod }}</td>
+    <td>
+        <span class="tag {% if reserve.payed %}is-success {% else %}is-dark {% endif %}">
+            {% if reserve.payed %}Paid{% else %}Unpaid{% endif %}
+        </span>
+    </td>
+
     {% include 'reserve/view/table/reserve_actions.html' %}
 </tr>
 {% include 'reserve/view/table/modal.html' %}

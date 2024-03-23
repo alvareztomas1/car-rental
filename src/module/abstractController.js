@@ -5,5 +5,6 @@ module.exports = class AbstractController {
 		if(new.target === AbstractController){
 			throw new AbstractControllerError();
 		}
+    
 	}
 };

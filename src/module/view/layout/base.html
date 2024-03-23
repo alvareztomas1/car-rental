@@ -32,14 +32,17 @@
         <a href="/" class="navbar-item">
           Home
         </a>
+        <a href="/user/list" class="navbar-item">
+          Users
+        </a>
+        <a href="/user/create" class="navbar-item">
+          Add new user
+        </a>
         <a href="/car/create" class="navbar-item">
           Add new car
         </a>
         <a href="/reserve/list" class="navbar-item">
           Reserves
-        </a>
-        <a class="navbar-item">
-          Reset cars
         </a>
   </nav>
 
@@ -133,18 +136,26 @@
 
   var maxDate = new Date();
   maxDate.setFullYear(currentDate.getFullYear() + 1);
+  var currentDate = new Date();
+
+  var maxBirthDate = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
 
   flatpickr("#date-start", {
     dateFormat: "Y-m-d",
     minDate: "today", 
-    maxDate: maxDate, 
+    maxDate: maxDate,
     onClose: function (selectedDates) {
       flatpickr("#date-end", {
-        minDate: selectedDates[0],
-        maxDate: maxDate 
+        minDate: selectedDates[0] || "today",
+        maxDate: maxDate,
       });
     }
   });
+  flatpickr("#birthdate", {
+    dateFormat: "Y-m-d",
+    minDate: "1900-01-01",
+    maxDate: maxBirthDate
+  })
 </script>
 
 </html>

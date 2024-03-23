@@ -1,4 +1,4 @@
-const AbstractService = require("./abstractService");
+const AbstractService = require("../../abstractService");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 const CarNotDefinedError = require("./error/carNotDefinedError");
 
@@ -27,23 +27,22 @@ module.exports = class CarService extends AbstractService {
 
 	async delete(id) {
 		if (id === undefined) {
-			throw new CarNotDefinedError("Car is not defined");
+			throw new CarIdNotDefinedError("Car is not defined");
 		}
 
 		return this.carRepository.delete(id);
 	}
-	validateForm(data) {
+	validateForm(data, validateFieldCallbackFunction) {
 		const validation = {};
 
 		Object.keys(data).forEach((key) => {
-			validation[`${key}`] = this.validateField(key, data[key]);
+			validation[`${key}`] = validateFieldCallbackFunction(key, data[key]);
 		});
 
 		return validation;
 	}
 
 	validateField(type, input) {
-
 		switch (type) {
 
 		case "id":
@@ -94,8 +93,6 @@ module.exports = class CarService extends AbstractService {
 		case "description":
 			return /^[a-zA-Z0-9,.!?;() '-]{1,200}$/.test(input);
 
-		case "reserved":
-			return /^(0|1)$/.test(input);
 		}
 	}
 };

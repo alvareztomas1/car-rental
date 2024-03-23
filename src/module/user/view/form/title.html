@@ -1,0 +1,9 @@
+{% if not user.id %}
+<div class="tags are-large is-centered">
+    <span class="tag is-large">Add new user</span>
+</div>
+{% else %}
+<div class="tags are-large is-centered">
+    <span class="tag is-large">Edit user</span>
+</div>
+{% endif %}

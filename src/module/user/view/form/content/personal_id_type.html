@@ -1,0 +1,40 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Personal ID type </label>
+        <div class="control has-icons-right">
+            <div class="select">
+                <select name="personal-id-type" id="personal-id-type">
+                    <option value="Passport" {% if data.user.personalIdType==="Passport" %} selected {% endif %}>Passport
+                    </option>
+                    <option value="SSN" {% if data.user.personalIdType==="SSN" %} selected {% endif %}>SSN
+                    </option>
+                    <option value="Driver's license" {% if data.user.personalIdType==="Driver's license" %} selected {%
+                        endif %}>
+                        Driver's license</option>
+                    <option value="National ID Card" {% if data.user.personalIdType==="National ID Card" %} selected {%
+                        endif %}>
+                        National ID Card</option>
+                        <option value="Other" {% if data.user.personalIdType==="Other" %} selected {%
+                            endif %}>
+                            Other</option>
+                </select>
+            </div>
+
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.personalIdType %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.personalIdType %} is-danger {% endif %} {% endif %}">
+            {% if validation.personalIdType === false %}
+                Invalid personal ID type. Pick one from the list.
+            {% endif %}
+        </p>
+    </div>
+</div>

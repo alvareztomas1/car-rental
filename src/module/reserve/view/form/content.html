@@ -1,28 +1,19 @@
 <div class="columns">
     <div class="column">
-        <div class="field">
-            <label class="label">Select a start date</label>
-            <div class="control">
-                <input value="{{ reserve.since }}" name="since" id="date-start" class="input" type="text" placeholder="Since" required>
-            </div>
-            {% if validation.since === false %}
-                <p class="help is-danger">Invalid date</p>
-            {% endif %}
-        </div>
+       {% include "reserve/view/form/content/since.html" %}
     </div>
     <div class="column">
-        <div class="field">
-            <label class="label">Select an end date</label>
-            <div class="control">
-                <input value="{{ reserve.until }}" name="until" id="date-end" class="input" type="text" placeholder="Until" required>
-            </div>
-            {% if validation.until === false %}
-                <p class="help is-danger">Invalid date</p>
-            {% endif %}
-        </div>
+        {% include "reserve/view/form/content/until.html" %}
+    </div>
+    <div class="column">
+        {% include "reserve/view/form/content/user.html" %}
+    </div>
+    <div class="column">
+        {% include "reserve/view/form/content/payment_method.html" %}
     </div>
 </div>
 
-<input class="is-hidden" type="hidden" name="id" value="{{ reserve.id }}">
-<input class="is-hidden" type="hidden" name="car-id" value="{{ data.car.id }}">
 
+
+<input class="is-hidden" type="hidden" name="id" value="{{ reserve.id }}">
+<input class="is-hidden" type="hidden" name="car-id" value="{{ car.id }}">

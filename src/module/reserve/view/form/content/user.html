@@ -1,0 +1,18 @@
+<div class="field">
+    <label class="label">User</label>
+    <div class="control">
+        <div class="select">
+            <select name="user-id" id="user-id">
+                {% for user in users %}
+                    <option {% if reserve.user.id === user.id %} selected {% endif %} value="{{ user.id }}">{{ user.names }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <p
+            class="help {% if validation %} {% if not validation.user %}  is-danger {% endif %} {% endif %}">
+            {% if validation.user === false %}
+                Invalid user selected. You must pick one from the list.
+            {% endif %}
+        </p>
+    </div>
+</div>

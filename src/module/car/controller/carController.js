@@ -1,4 +1,4 @@
-const AbstractController = require("./abstractController");
+const AbstractController = require("../../abstractController");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 const { fromDataToCarEntity } = require("../mapper/carMapper");
 
@@ -33,7 +33,7 @@ module.exports = class CarController extends AbstractController {
 	async view(req, res) {
 		const id = req.params.id;
 
-		if (!id) {
+		if (id === undefined) {
 			throw new CarIdNotDefinedError("Car id not defined");
 		}
 
@@ -77,9 +77,11 @@ module.exports = class CarController extends AbstractController {
 				};
 			}
 
-			const validation = this.carService.validateForm(car);
+			const validation = this.carService.validateForm(car, (key, value) => {
+				return this.carService.validateField(key, value);
+			});
 			const validationIsSuccess = !Object.values(validation).includes(false);
-	
+			
 			if (validationIsSuccess){
 				const savedCar = await this.carService.save(car);
 
@@ -88,7 +90,6 @@ module.exports = class CarController extends AbstractController {
 				} else {
 					req.session.messages = [`${savedCar.brand} ${savedCar.model} ${savedCar.year} added succesfully`];
 				}
-
 				res.redirect("/car");
 			}
 			else {
@@ -97,7 +98,7 @@ module.exports = class CarController extends AbstractController {
 		}
 		catch (e) {
 			req.session.errors = [e.message, e.stack];
-			res.render("/car");
+			res.redirect("/car");
 		}
 	}
 	async delete(req, res){

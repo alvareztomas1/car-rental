@@ -1,14 +1,16 @@
-const AbstractController = require("../../car/controller/abstractController");
+const AbstractController = require("../../abstractController");
 const { fromDataToReserveEntity } = require("../mapper/reserveMapper");
 const CarIdNotDefinedError = require("./error/carIdNotDefinedError");
 const ReserveIdNotDefinedError = require("./error/reserveIdNotDefinedError");
+const NoUsersFoundError = require("./error/noUsersFoundError");
 
 module.exports = class ReserveController extends AbstractController {
-	constructor(carService, reserveService) {
+	constructor(carService, reserveService, userService) {
 		super();
 		this.ROUTE_BASE = "/reserve";
 		this.carService = carService;
 		this.reserveService = reserveService;
+		this.userService = userService;
 	}
 	configureRoutes(app) {
 		const ROUTE = this.ROUTE_BASE;
@@ -20,29 +22,26 @@ module.exports = class ReserveController extends AbstractController {
 	}
 
 	async index(req, res) {
-		const data = await this.reserveService.getAll();
-		
-		const reserves = data ? data.map((reserve) => {
-			return {
-				reserve,
-				price: this.reserveService.calculateCost(reserve.since, reserve.until, reserve.car.price)
-			};
-		}) : false;
-
-		
-		res.render("reserve/view/index.html", { reserves, pageTitle: "Cars reserves" });
+		const reserves = await this.reserveService.getAll();
+		res.render("reserve/view/index.html", { reserves: reserves ? reserves : false, pageTitle: "Cars reserves" });
 	}
 
 	async create(req, res) {
+		const id = req.params.id;
+
+		if (id === undefined) {
+			throw new CarIdNotDefinedError("Car id not defined");
+		}
+
+		const users = await this.userService.getAll();
+		
+		if(!users){
+			throw new NoUsersFoundError("No users found. Create an User first");
+		}
+
 		try {
-			const id = req.params.id;
-			if (id === undefined) {
-				throw new CarIdNotDefinedError("Car id not defined");
-			}
 			const car = await this.carService.getById(id);
-
-			res.render("reserve/view/form/form.html", { data: { car }, pageTitle: "Reserve a car" });
-
+			res.render("reserve/view/form/form.html", { car, users, pageTitle: "Reserve a car" });
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
@@ -50,36 +49,50 @@ module.exports = class ReserveController extends AbstractController {
 	}
 	
 	async save(req, res) {
-		try {
-			const { since, until, id } = req.body;
-			const carId = req.body["car-id"];
+		const reserveData = {
+			id: req.body.id,
+			carId: req.body["car-id"],
+			userId: req.body["user-id"],
+			since: req.body.since,
+			until: req.body.until,
+			paymentMethod: req.body["payment-method"]
+		};
 
-			const reserveData = {
-				id,
-				since,
-				until,
-				carId
+		try {
+			const car = await this.carService.getById(reserveData.carId);
+			const user = await this.userService.getById(reserveData.userId);
+			const reserveToSave = {
+				id: reserveData.id, 
+				car,
+				user, 
+				since: reserveData.since, 
+				until: reserveData.until,
+				pricePerDay: car.price,
+				totalPrice: this.reserveService.calculateCost(reserveData.since, reserveData.until, car.price),
+				payed: reserveData.paymentMethod === "Cash" ? false : true,
+				paymentMethod: reserveData.paymentMethod 
 			};
 
-			const car = await this.carService.getById(carId);
-			const validation = this.reserveService.validate(reserveData);
+			const reserve = fromDataToReserveEntity(reserveToSave);
+			const validation = this.reserveService.validate(reserveData, (field, input) => {
+				return this.carService.validateField(field, input);
+			});
 			const validationIsSuccess = !Object.values(validation).includes(false);
 
 			if (validationIsSuccess) {
-				const reserve = fromDataToReserveEntity({ id, car, since, until });
-				const reserveResult = await this.reserveService.save(reserve);
+				const savedReserve = await this.reserveService.save(reserve);
 				
-				if(id){
-					req.session.messages = [`Reserve #${reserveResult.id} of ${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} edited succesfully`];
+				if(reserveData.id){
+					req.session.messages = [`Reserve #${savedReserve.id} of ${savedReserve.car.brand} ${savedReserve.car.model} ${savedReserve.car.year} edited succesfully`];
 				}else{
-					req.session.messages = [`${reserveResult.car.brand} ${reserveResult.car.model} ${reserveResult.car.year} reserved succesfully`];
+					req.session.messages = [`${savedReserve.car.brand} ${savedReserve.car.model} ${savedReserve.car.year} reserved succesfully`];
 				}
+
 				res.redirect("/");
 			}else{
-				res.render("reserve/view/form/form.html", { data: { car }, validation, pageTitle: "Reserve a car" });
+				const users = await this.userService.getAll();
+				res.render("reserve/view/form/form.html", { car, users, reserve, validation, pageTitle: "Reserve a car" });
 			}
-			
-
 		} catch (e) {
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");
@@ -114,9 +127,11 @@ module.exports = class ReserveController extends AbstractController {
 
 		try{
 			const reserve = await this.reserveService.getById(id);
+			const users = await this.userService.getAll();
+
 			const car = reserve.car;
-			
-			res.render("reserve/view/form/form.html", { data: { car }, reserve, pageTitle: "Reserve a car" });	
+
+			res.render("reserve/view/form/form.html", { car, users, reserve, pageTitle: "Reserve a car" });	
 		}catch(e){
 			req.session.errors = [e.message, e.stack];
 			res.redirect("/");

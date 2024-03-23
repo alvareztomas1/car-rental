@@ -1,0 +1,24 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Names</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.user.names }}" name="names" id="names"
+                class="input {% if validation %} {% if validation.names %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="text" placeholder="User names" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.names %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p class="help {% if validation %} {% if not validation.names %} is-danger {% endif %} {% endif %}">
+            {% if validation.names === false %}
+                Invalid input, names must be between 3 and 100 characters.
+            {% endif %}
+        </p>
+    </div>
+</div>

@@ -1,15 +1,19 @@
-const { CarController, CarService, CarRepository } = require("../module/car/module");
-const { ReserveController, ReserveService, ReserveRepository } = require("../module/reserve/module");
+const { CarController, CarService, CarRepository, CarModel } = require("../module/car/module");
+const { ReserveController, ReserveService, ReserveRepository, ReserveModel } = require("../module/reserve/module");
+const { UserController, UserService, UserRepository, UserModel } = require("../module/user/module");
 const { default: DIContainer, object, get, factory } = require("rsdi");
 const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
-const Sqlite3Database = require("better-sqlite3");
+const { Sequelize } = require("sequelize");
 
-function configureMainDatabaseAdapter(){
-	return new Sqlite3Database(process.env.DB_path,{
-		verbose: console.log
+function configureMainSequelizeAdapter(){
+	const sequelize = new Sequelize({
+		dialect: "sqlite",
+		storage: process.env.DB_path
 	});
+
+	return sequelize;
 }
 
 function configureSession(){
@@ -37,26 +41,54 @@ function configureMulter(){
 	return multer({ storage });
 }
 
+function configureCarModel(container){
+	CarModel.setup(container.get("Sequelize"));
+	return CarModel;
+}
+
+function configureReserveModel(container){
+	ReserveModel.setup(container.get("Sequelize"));
+	ReserveModel.setUpAssociations(container.get("CarModel"),  container.get("UserModel"));
+	return ReserveModel;
+}
+
+function configureUserModel(container){
+	UserModel.setup(container.get("Sequelize"));
+
+	return UserModel;
+}
+
 function addCommonDefinitions(container){
 	container.addDefinitions({
-		MainDatabaseAdapter: factory(configureMainDatabaseAdapter),
 		Multer: factory(configureMulter),
 		Session: factory(configureSession),
+		Sequelize: factory(configureMainSequelizeAdapter),
 	});
 }
 function addCarModuleDefinitions(container){
 	container.addDefinitions({
 		CarController: object(CarController).construct(get("Multer"), get("CarService")),
 		CarService: object(CarService).construct(get("CarRepository")),
-		CarRepository: object(CarRepository).construct(get("MainDatabaseAdapter")),
+		CarRepository: object(CarRepository).construct(get("CarModel"), get("ReserveModel")),
+		CarModel: factory(configureCarModel),
 	});
 }
 
 function addReserveModuleDefinitions(container){
 	container.addDefinitions({
-		ReserveController: object(ReserveController).construct(get("CarService"), get("ReserveService")),
-		ReserveService: object(ReserveService).construct(get("ReserveRepository"), get("CarService")),
-		ReserveRepository: object(ReserveRepository).construct(get("MainDatabaseAdapter")),
+		ReserveController: object(ReserveController).construct(get("CarService"), get("ReserveService"), get("UserService")),
+		ReserveService: object(ReserveService).construct(get("ReserveRepository"), get("CarService"), get("UserService")),
+		ReserveRepository: object(ReserveRepository).construct(get("ReserveModel"), get("CarModel"), get("UserModel")),
+		ReserveModel: factory(configureReserveModel),
+	});
+}
+
+function addUserModuleDefinitions(container){
+	container.addDefinitions({
+		UserController: object(UserController).construct(get("UserService")),
+		UserService: object(UserService).construct(get("UserRepository")),
+		UserRepository: object(UserRepository).construct(get("UserModel"), get("ReserveModel")),
+		UserModel: factory(configureUserModel),
 	});
 }
 
@@ -65,6 +97,7 @@ module.exports = function configureDI(){
 	addCommonDefinitions(container);
 	addCarModuleDefinitions(container);
 	addReserveModuleDefinitions(container);
+	addUserModuleDefinitions(container);
 
 	return container;
 };

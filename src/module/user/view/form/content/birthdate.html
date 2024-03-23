@@ -1,0 +1,27 @@
+<div class="column">
+    <div class="field">
+        <label class="label">Birthdate</label>
+        <div class="control has-icons-right">
+            <input value="{{ data.user.birthdate }}" name="birthdate" id="birthdate"
+                class="input {% if validation %} {% if validation.birthdate %} is-success {% else %} is-danger {% endif %} {% endif %}"
+                type="text" placeholder="User birthdate" required>
+            <span class="icon is-small is-right">
+                {% if validation %}
+                {% if validation.birthdate %}
+                <i class="fas fa-check"></i>
+                {% else %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        <p class="help {% if validation %} {% if not validation.birthdate %} is-danger {% endif %} {% endif %}">
+            {% if validation.birthdate === false %}
+                Invalid birthdate.
+            {% endif %}
+        </p>
+        <p class="help">
+            User must be at least 18 years old to register.
+        </p>
+    </div>
+</div>
