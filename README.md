@@ -1,4 +1,11 @@
-# C4 Diagrams:
+<h1 align="center">Car Rental App</h1>
+
+### About the project
+
+Server-Side Rendering CRUD Application that manages the business logic of a car rental system, enabling clients to register users and create vehicle reservations. The application follows `SOLID` principles, with modules separated and implemented using the `'Model-View-Controller'`
+design pattern.
+
+## C4 Diagrams:
 
 Entities:
 
@@ -16,13 +23,10 @@ L3:
 
 ![car-rental entities](/car-rental%20L3.jpg)
 
-# About the project
-
-Server-Side Rendering CRUD Application that manages the business logic of a car rental system, enabling clients to register users and create vehicle reservations. The application follows `SOLID` principles, with modules separated and implemented using the `'Model-View-Controller'`
- design pattern.
 
 
-# Technologies used
+
+## Technologies used
 
 - **Sqlite**:  SQLite is a Relational Database Management System (RDBMS) database engine.
 - **Sequelize**: Object-Relational Mapper (ORM) for PostgreSQL, MySQL, MariaDB, SQLite, and Microsoft SQL Server. Facilitates the communication with the SQLite databases by providing models and establishing entity relations.
@@ -38,7 +42,7 @@ Server-Side Rendering CRUD Application that manages the business logic of a car 
 - **Flatpickr**: Flatpickr is a  datetime picker library. It provides a user-friendly interface for selecting dates.
 
 
-# Project structure
+## Project structure
 
 ### " * " represents Car, User and Reserve modules
 
