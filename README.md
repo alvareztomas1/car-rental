@@ -44,7 +44,7 @@ L3:
 
 ## Project structure
 
-### " * " represents Car, User and Reserve modules
+" * " represents Car, User and Reserve modules
 
 | Path                   | Description                                                                                           |
 |------------------------|-------------------------------------------------------------------------------------------------------|
