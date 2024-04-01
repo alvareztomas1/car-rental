@@ -36,7 +36,7 @@ L3:
 - **Dotenv**: Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. It simplifies the management of environment-specific configurations in Node.js applications.
 - **Express**: It provides a set of features for building web, including routing, middleware, and HTTP utilities.
 - **Node.js**: Node.js is a runtime environment that allows you to run JavaScript on the server-side.
-- **Nodemon**: Nodemon is a utility that monitors for changes in the application and automatically restarts the server. It enhances the development workflow by speeding up the development cycle and reducing downtime.
+- **Nodemon**: Nodemon is a utility that monitors for changes in the application and automatically restarts the server.
 - **Eslint**: It helps maintain code quality and consistency across a project.
 - **Multer**: Multer is a middleware for handling multipart/form-data, used for uploading files in Node.js applications.
 - **Flatpickr**: Flatpickr is a  datetime picker library. It provides a user-friendly interface for selecting dates.
